@@ -3,18 +3,13 @@ import { Link } from "react-router-dom";
 //import img from './Images/Team work-amico.png'
 const Home = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 relative overflow-hidden flex flex-col justify-between py-1">
-      {/* Decorative Horizontal Lines */}
-      <div className="absolute inset-0 grid grid-rows-6 gap-4 opacity-10">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="row-span-1 bg-gray-400 w-full h-[1px]"></div>
-        ))}
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 relative overflow-hidden flex flex-col justify-between py-4">
+      
 
       {/* Content */}
       <div className="relative z-10">
         {/* Navbar */}
-        <header className="container mx-auto py-6 px-6 flex justify-between items-center">
+        <header className="container mx-auto py-6 px-6 flex justify-between items-center border-b-gray-400 border-opacity-10 border-b-2  w-full">
           <h1 className="text-2xl font-bold text-gray-800">TaskFlow</h1>
           <nav className="flex items-center gap-4 ">
             <Link to="/" className="text-gray-600 no-underline hover:text-blue-600">
@@ -31,7 +26,7 @@ const Home = () => {
               Contact
             </Link>
           </nav>
-          <button className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">
+          <button className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900">
             Get Started
           </button>
         </header>
@@ -51,7 +46,7 @@ const Home = () => {
  
             <div className="flex justify-center space-x-4">
               <button className="bg-gray-800 text-white px-6 py-3 rounded shadow hover:bg-gray-900">
-                Try it Free
+                Login
               </button>
               <button className="bg-white border border-gray-300 text-gray-800 px-6 py-3 rounded shadow hover:bg-gray-100">
                 Register

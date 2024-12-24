@@ -1,17 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
-//test ;dsqdqqs
-//import img from './Images/Team work-amico.png'
+import logo from './Images/Task_flow__2___1_-removebg-preview.png'
+
 const Home = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 relative overflow-hidden flex flex-col justify-between py-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 relative overflow-hidden flex flex-col justify-between py-2">
       
 
       {/* Content */}
       <div className="relative z-10">
         {/* Navbar */}
         <header className="container mx-auto py-6 px-6 flex justify-between items-center border-b-gray-400 border-opacity-10 border-b-2  w-full">
-          <h1 className="text-2xl font-bold text-gray-800">TaskFlow</h1>
+         <img src={logo} className="h-20 " alt=""></img>
           <nav className="flex items-center gap-4 ">
             <Link to="/" className="text-gray-600 no-underline hover:text-blue-600">
               Home
@@ -46,12 +46,12 @@ const Home = () => {
             </p>
  
             <div className="flex justify-center space-x-4">
-              <button className="bg-gray-800 text-white px-6 py-3 rounded shadow hover:bg-gray-900">
+            <Link to={'/login'} ><button className="bg-gray-800 text-white px-6 py-3 rounded shadow hover:bg-gray-900">
                 Login
-              </button>
-              <button className="bg-white border border-gray-300 text-gray-800 px-6 py-3 rounded shadow hover:bg-gray-100">
-                Register
-              </button>
+              </button></Link> 
+              <Link to={'/signup' } ><button className="bg-white border border-gray-300 text-gray-800 px-6 py-3 rounded shadow hover:bg-gray-200">
+                 Register
+              </button></Link> 
             </div>
           </div>
         </div>

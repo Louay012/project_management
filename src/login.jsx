@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import img from './Images/Good team-bro.png'
+import { Link } from 'react-router-dom';
+import { IoIosLogIn } from "react-icons/io";
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -11,7 +13,7 @@ const Login = () => {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gradient-to-r from-gray-50  to-gray-100">
+    <div className="h-screen flex items-center justify-center bg-gradient-to-r from-gray-50  to-emerald-50">
 
       <div className="bg-white p-8 rounded-lg shadow-lg w-5/6 max-w-full space-y-6 h-5/6 flex items-center justify-around">
         
@@ -47,15 +49,15 @@ const Login = () => {
                     />
                 </div>
 
-                <button 
-                    type="submit" 
-                    className="w-full py-3 bg-zinc-800 text-white font-semibold rounded-md hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                >
-                    Login
-                </button>
+                 <button type="submit" 
+                    className="w-full py-3 bg-zinc-800 text-white font-semibold flex items-center justify-center gap-2
+                                    rounded-md hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <i><IoIosLogIn className='h-8 w-6'></IoIosLogIn></i>
+                      Login
+                  </button>
                 </form>
 
-                <p className="text-center text-sm text-gray-600">Don't have an account? <a href="#" className="text-gray-500 hover:underline hover:text-gray-700">Sign up</a></p>
+                <p className="text-center text-sm text-gray-600">Don't have an account? <Link to={"/signup"} className="text-gray-500 hover:underline hover:text-gray-700">Sign up</Link></p>
                 </div>
                 <img src={img} alt='' className='w-1/2'></img>
       </div>

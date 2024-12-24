@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Home from './home.jsx';
 import Login from './login.jsx';
 import { createBrowserRouter , RouterProvider } from 'react-router-dom';
-
+import Task from './tasks.jsx';
 import  { Toaster } from 'react-hot-toast';
 import Signup from './signup.jsx';
 
@@ -18,6 +18,10 @@ const router = createBrowserRouter([
   {
     path:"/signup",
     element:<Signup/>
+  },
+  {
+    path:"/tasks",
+    element:<Task/>
   },
 ])
 function App() {

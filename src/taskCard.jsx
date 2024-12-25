@@ -2,6 +2,8 @@
 import React,{ useEffect, useState ,useContext,useRef } from "react";
 import { FaUpload, FaRegComment } from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
+import { TbTargetArrow } from "react-icons/tb";
+
 import toast from 'react-hot-toast';
 // handle_submit 
 const TaskRow = ({ task, isSelected, onSelect }) => {
@@ -114,7 +116,7 @@ const TaskRow = ({ task, isSelected, onSelect }) => {
             <h2 className="text-2xl font-semibold text-gray-700">Task: {task.task_title}</h2>
             <p><strong>Project:</strong> {task.project_title}</p>
             <p><strong>Description:</strong> {task.description}</p>
-            <p><strong>Due Date:</strong> {task.dead_line}</p>
+            <p className="flex items-center gap-2"><strong>DeadLine : </strong> <TbTargetArrow></TbTargetArrow> {task.deadline}</p>
             <p className="flex items-center justify-around gap-2"><strong>Upload your work here :</strong><div className=""> 
                           <label className="cursor-pointer bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600
                           transition flex items-center justify-center gap-2"  

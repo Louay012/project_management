@@ -50,7 +50,7 @@ const Task= () => {
     }
     useEffect(() => {
       fetch_Tasks()
-    },[ ])  ; 
+    },[])  ; 
 
   const [selectedTaskId, setSelectedTaskId] = useState(null); // Track selected task
   console.log(selectedTaskId)
@@ -59,9 +59,9 @@ const Task= () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex p-3 bg-slate-200 gap-2">
+    <div className="w-full min-h-screen h-screen flex p-3 bg-slate-200 gap-2">
         <Sidebar></Sidebar>
-        <div className="flex-1 p-6 bg-gray-50 min-h-screen rounded shadow-md">
+        <div className="flex-1 p-6 bg-gray-50 min-h-screen h-full rounded-lg shadow-md">
           <h1 className="text-3xl font-semibold mb-6 flex items-center gap-2"> <FaTasks></FaTasks> Task Management</h1>
 
           {/* Task Column Titles */}

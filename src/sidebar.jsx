@@ -46,7 +46,7 @@ const Sidebar = () => {
       }
       useEffect(() => {
         fetch_Projects()
-      },[projects])  ; 
+      },[])  ; 
   return (
     <div className="h-screen w-56 bg-slate-200  flex flex-col rounded">
       {/* Logo */}
@@ -100,7 +100,7 @@ const Sidebar = () => {
         <div className="mt-6 px-4">
           <h2 className="text-xs font-semibold text-gray-500 uppercase">Projects</h2>
           <ul className="mt-2 ">
-            {projects.map((p)=><li>
+            {projects.map((p)=><li key={p.id}>
               <Link
                 to={`/project/${p.id}`}
                 className="flex items-center gap-3 p-2 text-gray-700 hover:bg-slate-300 no-underline rounded-md"

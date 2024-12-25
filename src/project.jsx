@@ -1,41 +1,64 @@
 import React, { useState,useContext,useEffect } from "react";
 //import { UserContext } from './UserContext';
-import TaskRow from "./taskCard"; // Import TaskRow
-// fetch tasks
+import { Pie  } from 'react-chartjs-2';
+import { useParams } from "react-router-dom";
 import Sidebar from "./sidebar";
 import { FaTasks } from "react-icons/fa";
+import { TbFlagMinus } from "react-icons/tb";
+import { TbFlagExclamation } from "react-icons/tb";
+import { TbFlagBolt } from "react-icons/tb";
+import { SlCalender } from "react-icons/sl";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from 'chart.js';
+import { TbTargetArrow } from "react-icons/tb";
+ChartJS.register(ArcElement, Tooltip, Legend, Title);
 <link
   href="https://fonts.googleapis.com/icon?family=Material+Icons"
   rel="stylesheet"
 />
 
 const Project= () => {
-  const [tasks, setTasks] = useState([]);
-  //const { userDetails } = useContext(UserContext);
-
-  const[username,setUsername]=useState('');
+    const [TaskStats, setTaskStats] = useState(null);
+  const [ProjectDetails, setProjectDetails] = useState([]);
+  const { project_id } = useParams(); 
+  const[tasks,setTasks]=useState([]);
   const [error, setError] = useState(null);
-
-  const fetch_Tasks=async () => {
+  console.log(project_id)
+  const fetch_details=async () => {
     try{
       
         
-      const response= await fetch('http://localhost/project_management/src/API/tasks.php' ,{
+      const response= await fetch('http://localhost/project_management/src/API/get_project_details.php' ,{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ 
-                user_id:1
+                project_id:project_id,
+
               }),
         })
-
+        console.log(project_id)
         const data = await response.json();
       
             if (data.success) {
-              console.log(data.data)
-                setTasks(data.data);
-             
+              console.log(data.tasks)
+              setProjectDetails(data.details);
+              setTasks(data.tasks)
+              const dataStats=[data.stats[0].completed,data.stats[0].in_progress,data.stats[0].pending];
+              console.log(dataStats)
+              setTaskStats({
+                labels: ['Completed', 'In Progress', 'Pending'],
+                datasets: [
+                  {
+                    label: 'Task Statuses',
+                    data: dataStats,
+                    backgroundColor: ['rgba(76, 175, 80, 0.2)', 'rgba(155, 175, 76, 0.1)', 'rgba(62, 90, 167, 0.2)'], // Green, Yellow, Red
+                    borderColor: ['rgba(76, 175, 80, 0.6)', 'rgba(155, 175, 76, 0.6)', 'rgba(62, 90, 167, 0.6)'],
+                    borderWidth: 1,
+                  },
+                ],
+              });
+              
             }
              else {
             setError(data.message || "Failed to fetch Tasks.");
@@ -49,59 +72,120 @@ const Project= () => {
         
     }
     useEffect(() => {
-      fetch_Tasks()
+        fetch_details()
     },[ ])  ; 
 
-  const [selectedTaskId, setSelectedTaskId] = useState(null); // Track selected task
-  console.log(selectedTaskId)
-  const handleTaskSelect = (taskId) => {
-    setSelectedTaskId(selectedTaskId === taskId ? null : taskId);
-  };
+   
 
   return (
     <div className="w-full min-h-screen flex p-3 bg-slate-200 gap-2">
         <Sidebar></Sidebar>
-        <div className="flex-1 p-6 bg-gray-50 min-h-screen rounded shadow-md">
-          <h1 className="text-3xl font-semibold mb-6 flex items-center gap-2"> <FaTasks></FaTasks> Task Management</h1>
+        <div className="overflow-x-auto flex-1 p-6 bg-gray-50 min-h-screen h-full rounded-lg shadow-md flex flex-col justify-around">
+        {ProjectDetails[0] && <div className="bg-gray-50 p-3 border-1 rounded-lg shadow-md flex justify-around items-center">
+                  <div className="">
+                    
+                    <p className="text-4xl"><strong>Project:</strong> {ProjectDetails[0].project_title}</p>
+                    <p><strong>Description:</strong> {ProjectDetails[0].description}</p>
+                    <p><strong>Created at:</strong> {ProjectDetails[0].created_at}</p>
+                    
+                    
+                  </div>
+                  <div> 
+                    <p ><strong>Status:</strong> <span className={`   font-medium ${
+                    ProjectDetails[0].status ===  "Completed"
+                    ? "text-green-500"
+                    : ProjectDetails[0].status === "In-Progress"
+                    ? "text-yellow-500"
+                    
+                    : "text-blue-500"
+                  }`}>{ProjectDetails[0].status}</span> </p>
+                    <p className="flex items-center gap-2"><strong>DeadLine : </strong> <span className="text-red-500 flex items-center gap-2"><TbTargetArrow></TbTargetArrow> {ProjectDetails[0].deadline}</span> </p>
+                    <p className="flex items-center gap-2"><strong>Days left : </strong> <span className="text-red-500">{ProjectDetails[0].days_until_deadline}</span> </p>
+                  </div>
+                  <div className="w-64 h-52">
+                    <Pie  data={TaskStats} options={{
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                  legend: {
+                                    position: 'top',
+                                  },
+                                },
+                              }} /></div>
+                  
+         </div>}
+        <table className="min-w-full border-collapse border border-gray-200 shadow-sm">
+        <thead className="bg-gray-100">
+          <tr>
+            <th className="px-6 py-3 border border-gray-300 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+              Title
+            </th>
+            <th className="px-6 py-3 border border-gray-300 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+              Description
+            </th>
+            <th className="px-6 py-3 border border-gray-300 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                Priority
+            </th>
+            <th className="px-6 py-3 border border-gray-300 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+               Deadline
+            </th>
+            <th className="px-6 py-3 border border-gray-300 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+              Status
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {tasks.map((t) => (
+            <tr
+              key={t.id}
+              
+            >
+              <td className="px-6 py-4 border border-gray-300 text-sm text-gray-900">
+                {t.task_title}
+              </td>
+              <td className="px-6 py-4 border border-gray-300 text-sm text-gray-900">
+                {t.description}
+              </td>
+              <td  className="px-6 py-4 border border-gray-300 text-sm text-center">
+              <span className={`px-3 py-1 rounded-md inline-flex items-center gap-2  text-center font-medium border-1 ${
+                    t.priority === "high"
+                            ? "text-red-500 border-red-500"
+                            : t.priority === "medium"
+                            ? "text-yellow-500 border-yellow-500"
+                            
+                            : "text-blue-500 border-blue-500"
+                  }`}>
 
-          {/* Task Column Titles */}
-          <div
-            className="flex bg-slate-600 p-3 rounded-lg shadow-md mb-4"
-            style={{ display: "grid", gridTemplateColumns: "2fr 2fr 3fr 1fr 1fr " }}
-          >
-            <div className="flex flex-col justify-center items-start"  >
-              <span className="font-bold text-gray-100">Project </span>
-            </div>
-
-            <div className="flex flex-col justify-center items-start"  >
-              <span className="font-bold text-gray-100">Task Name</span>
-            </div>
-
-            <div className="flex flex-col justify-center items-start"  >
-              <span className="font-bold text-gray-100">Description</span>
-            </div>
-
-            <div className="flex flex-col justify-center items-start"  >
-              <span className="font-bold text-gray-50">Status</span>
-            </div>
-
-            <div className="flex flex-col justify-center items-start"  >
-              <span className="font-bold text-gray-100">Due Date</span>
-            </div>
-          </div>
-
-          {/* Task List */}
-          <div className="space-y-5">
-            {tasks.map((task) => (
-              <TaskRow
-                key={task.id}
-                task={task}
-                isSelected={selectedTaskId === task.id} // Check if task is selected
-                onSelect={handleTaskSelect} // Handle task click
-              />
-            ))}
-          </div>
-        </div>
+                {t.priority === "high" && <TbFlagExclamation />}
+                {t.priority === "medium" && <TbFlagMinus />}
+                {t.priority === "low" && <TbFlagBolt />}
+                {t.priority}
+                </span>
+              </td>
+              
+              <td className="px-6 py-4 border border-gray-300 text-sm text-gray-900 ">
+                <div className="flex items-center gap-2 justify-center "><SlCalender></SlCalender> {t.deadline}</div>
+               
+              </td>
+              <td className="px-6 py-4 border border-gray-300 text-sm text-center">
+                <span
+                  className={`px-3 py-1 rounded-full text-white text-xs font-medium ${
+                    t.status ===  "Completed"
+                    ? "bg-green-500"
+                    : t.status === "In-Progress"
+                    ? "bg-yellow-500"
+                    
+                    : "bg-blue-500"
+                  }`}
+                >
+                 {t.status}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
     </div>
   );
 };

@@ -29,7 +29,7 @@ const Sidebar = () => {
           const data = await response.json();
         
               if (data.success) {
-                console.log(data.data)
+                
                 setProjects(data.data);
                
               }
@@ -44,9 +44,9 @@ const Sidebar = () => {
           } 
           
       }
-      useEffect(() => {
+     /* useEffect(() => {
         fetch_Projects()
-      },[projects])  ; 
+      },[projects])  ; */
   return (
     <div className="h-screen w-56 bg-slate-200  flex flex-col rounded">
       {/* Logo */}

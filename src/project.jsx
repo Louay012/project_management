@@ -9,7 +9,7 @@ import { FaTasks } from "react-icons/fa";
   rel="stylesheet"
 />
 
-const Task= () => {
+const Project= () => {
   const [tasks, setTasks] = useState([]);
   //const { userDetails } = useContext(UserContext);
 
@@ -106,4 +106,4 @@ const Task= () => {
   );
 };
 
-export default Task;
+export default Project;

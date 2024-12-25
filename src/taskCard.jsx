@@ -1,23 +1,76 @@
-import React, { useState } from "react";
+
+import React,{ useEffect, useState ,useContext,useRef } from "react";
 import { FaUpload, FaRegComment } from "react-icons/fa";
-// handle_submit and useref when cancel
+import toast from 'react-hot-toast';
+// handle_submit 
 const TaskRow = ({ task, isSelected, onSelect }) => {
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
 
+
+   //const { userDetails } = useContext(UserContext);
+    const { userDetails }=useState({username:'sale7',user_id:2})
+  const messageRef = useRef(null);
+  const [error, setError] = useState(null);
+
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
+  let statusClass = "";
 
-  const handleSubmit = () => {
-    alert("Task confirmed!");
-    alert(`File: ${file ? file.name : "No file selected"}`);
-    alert(`Message to Manager: ${message}`);
+  if (task.status === "Completed") {
+    statusClass = "text-green-500";
+  } else if (task.status === "In Progress") {
+    statusClass = "text-yellow-500";
+  } else if (task.status === "To Do") {
+    statusClass = "text-red-500";
+  }
+
+  const handleSubmit=async (event) => {
+    event.preventDefault();
+    
+    try{
+          const response=await fetch('http://localhost/TABBE3NI/API/manage_task.php',{
+            method:'POST',
+            headers:{
+              'Content-Type': 'application/json',
+          },
+            body:JSON.stringify({
+              user_id: userDetails.user_id,
+              task_id: task.task_id,       
+            })
+          });
+          
+      const data=await response.json();
+     
+      if (data.success) {
+          hideForm();
+          //fetch_Categories();
+            toast.success(data.message, {
+            position: 'top-center',
+            autoClose: 3000, 
+            hideProgressBar: true,
+            closeOnClick: true,});
+            
+        } else {
+        setError(data.message || "Failed to submit task.");
+
+              }
+        } catch (err) {
+            setError("An error occurred while submitting task.");
+      
+        }
+        
+        }
+    
+  
+  const hideForm = () =>{
     onSelect(null)
     setFile(null)
     setMessage(null)
-  };
-
+    messageRef.current.value = ""
+    
+  }
   return (
     <div>
       {/* Task Row */}
@@ -43,7 +96,7 @@ const TaskRow = ({ task, isSelected, onSelect }) => {
         
         
         <div className="flex flex-col justify-center items-start">
-          <span className={`font-medium text-${task.status === 'Completed' ? 'green' : task.status === 'In Progress' ? 'yellow' : 'red'}-500`}>
+          <span className={`font-medium ${statusClass}`}>
             {task.status}
           </span>
         </div>
@@ -61,11 +114,12 @@ const TaskRow = ({ task, isSelected, onSelect }) => {
           <p><strong>Description:</strong> {task.description}</p>
           <p><strong>Due Date:</strong> {task.dead_line}</p>
 
-          <div className=" mt-2 mb-3 flex justify-around items-center">
+          <div  className=" mt-2 mb-3 flex justify-around items-center">
          
             <div className="w-1/5"> 
               <label className="block text-sm">Upload File :</label>
               <input 
+           
                 type="file"
                 onChange={handleFileChange}
                 className="w-full p-2 cursor-pointer border rounded"
@@ -76,6 +130,7 @@ const TaskRow = ({ task, isSelected, onSelect }) => {
             <div className="w-2/5">
               <label className="block text-sm">Message to Manager :</label>
               <textarea
+              ref={messageRef}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 className="w-full p-2 border rounded"
@@ -89,7 +144,7 @@ const TaskRow = ({ task, isSelected, onSelect }) => {
      
           <div className="flex justify-end gap-3 ">
             <button
-              onClick={() => onSelect(null)} 
+              onClick={hideForm} 
               className="px-4 py-2 bg-gray-300 rounded text-black"
             >
               Cancel

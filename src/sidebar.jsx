@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState ,useEffect} from "react";
 import { Link } from "react-router-dom";
 import { 
   HomeIcon, 
@@ -8,8 +8,45 @@ import {
   FolderIcon ,
   UserCircleIcon
 } from "@heroicons/react/outline";
-
+import { FaTasks } from "react-icons/fa";
 const Sidebar = () => {
+  const [projects,setProjects]=useState([]);
+  const [error, setError] = useState(null);
+   const fetch_Projects=async () => {
+      try{
+        
+          
+        const response= await fetch('http://localhost/project_management/src/API/get_projects.php' ,{
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ 
+                  user_id:1
+                }),
+          })
+  
+          const data = await response.json();
+        
+              if (data.success) {
+                console.log(data.data)
+                setProjects(data.data);
+               
+              }
+               else {
+              setError(data.message || "Failed to fetch Tasks.");
+  
+              }
+            
+          } catch (err) {
+              setError("An error occurred while fetching Tasks." );
+              
+          } 
+          
+      }
+      useEffect(() => {
+        fetch_Projects()
+      },[projects])  ; 
   return (
     <div className="h-screen w-56 bg-slate-200  flex flex-col rounded">
       {/* Logo */}
@@ -49,11 +86,11 @@ const Sidebar = () => {
           </li>
           <li>
             <Link
-              to="/assigned-to-me"
+              to="/tasks"
               className="flex items-center gap-3 p-2 text-gray-700 hover:bg-slate-300 no-underline rounded-md"
             >
-              <StarIcon className="w-6 h-6" />
-              <span>Assigned to me</span>
+              <FaTasks className="w-6 h-6" />
+              <span>Tasks</span>
             </Link>
           </li>
           
@@ -63,33 +100,16 @@ const Sidebar = () => {
         <div className="mt-6 px-4">
           <h2 className="text-xs font-semibold text-gray-500 uppercase">Projects</h2>
           <ul className="mt-2 ">
-            <li>
+            {projects.map((p)=><li>
               <Link
-                to="/projects/crm-dashboard"
+                to={`/project/${p.id}`}
                 className="flex items-center gap-3 p-2 text-gray-700 hover:bg-slate-300 no-underline rounded-md"
               >
                 <FolderIcon className="w-6 h-6" />
-                <span>CRM Dashboard</span>
+                <span>{p.project_title}</span>
               </Link>
-            </li>
-            <li>
-              <Link
-                to="/projects/saas-dashboard"
-                className="flex items-center gap-3 p-2 text-gray-700 hover:bg-slate-300 no-underline rounded-md"
-              >
-                <FolderIcon className="w-6 h-6" />
-                <span>SaaS Dashboard</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/projects/pertamina"
-                className="flex items-center gap-3 p-2 text-gray-700 hover:bg-slate-300 no-underline  rounded-md"
-              >
-                <FolderIcon className="w-6 h-6" />
-                <span>Pertamina Project</span>
-              </Link>
-            </li>
+            </li>)}
+            
           </ul>
         </div>
       </div>

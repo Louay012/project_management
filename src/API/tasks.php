@@ -1,8 +1,8 @@
 <?php
-/*
-header("Access-Control-Allow-Origin: *"); // Allow requests from this origin
+
+header("Access-Control-Allow-Origin: http://localhost:3000");// Allow requests from this origin
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Allow specific HTTP methods
-header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     http_response_code(200);
     exit();
@@ -17,25 +17,24 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
    try {
     $stmt=$pdo->prepare("SELECT
-    task_id,
-	t.title task_title,
-    description,
-    priority,
-    t.status,
-    t.dead_line
+                        p.title project_title,
+                        t.task_id id,
+                        t.title task_title,
+                        t.description,
+                        t.priority,
+                        t.status,
+                        t.deadline
 
-FROM 
-    tasks t 
-JOIN 
-    projects p
-ON 
-    p.project_id = t.project_id 
-JOIN
-    task_users tu
-ON
-    tu.task_id=t.task_id
-WHERE
-	tu.user_id= :user_id  ");
+                    FROM 
+                        tasks t 
+                    JOIN 
+                        projects p
+                    ON 
+                        p.project_id = t.project_id 
+                    JOIN
+                        task_users tu ON tu.task_id=t.task_id
+                    WHERE
+                        tu.user_id= :user_id  ");
 
     $stmt->bindParam(':user_id',$user_id);
   
@@ -57,5 +56,5 @@ WHERE
     echo json_encode(['success' => false, 'message' => 'connecting error']);
 }
     $pdo=null;
-*/
+
 ?>

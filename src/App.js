@@ -5,7 +5,7 @@ import { createBrowserRouter , RouterProvider } from 'react-router-dom';
 import Task from './tasks.jsx';
 import  { Toaster } from 'react-hot-toast';
 import Signup from './signup.jsx';
-
+import Project from './project.jsx';
 const router = createBrowserRouter([
   {
     path:"/",
@@ -22,6 +22,10 @@ const router = createBrowserRouter([
   {
     path:"/tasks",
     element:<Task/>
+  },
+  {
+    path:"/project/:project_id",
+    element:<Project/>
   },
 ])
 function App() {

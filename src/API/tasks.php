@@ -31,9 +31,9 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                         projects p
                     ON 
                         p.project_id = t.project_id 
-
+                    
                     WHERE
-                        t.user_id= :user_id  ");
+                        t.user_id= :user_id");
 
     $stmt->bindParam(':user_id',$user_id);
   

@@ -1,6 +1,6 @@
 
 import React,{ useEffect, useState ,useContext,useRef } from "react";
-import { FaUpload, FaRegComment } from "react-icons/fa";
+import { FaUpload } from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
 import { TbTargetArrow } from "react-icons/tb";
 
@@ -12,7 +12,7 @@ const TaskRow = ({ task, isSelected, onSelect }) => {
 
 
    //const { userDetails } = useContext(UserContext);
-    //const { userDetails }=useState({username:'sale7',user_id:2})
+   
   const messageRef = useRef(null);
   const [error, setError] = useState(null);
 
@@ -32,21 +32,24 @@ const TaskRow = ({ task, isSelected, onSelect }) => {
   const handleSubmit=async (event) => {
     event.preventDefault();
     
-    try{
-          const response=await fetch('http://localhost/TABBE3NI/API/manage_task.php',{
-            method:'POST',
-            headers:{
-              'Content-Type': 'application/json',
-          },
-            body:JSON.stringify({
-              user_id:1,
-              task_id: task.task_id,       
-            })
+    
+      const formData = new FormData();
+      formData.append('user_id', 1); 
+      formData.append('task_id', task.id); 
+      formData.append('message', message);
+      formData.append('file', file);
+    console.log(message)
+      try {
+          // Send the POST request
+          const response = await fetch('http://localhost/project_management/src/API/manage_task.php', {
+              method: 'POST',
+              body: formData, 
           });
-          
+      
       const data=await response.json();
      
       if (data.success) {
+        
           hideForm();
           //fetch_Categories();
             toast.success(data.message, {
@@ -61,12 +64,12 @@ const TaskRow = ({ task, isSelected, onSelect }) => {
               }
         } catch (err) {
             setError("An error occurred while submitting task.");
-      
+          console.log(err)
         }
         
         }
     
-  
+
   const hideForm = () =>{
     onSelect(null)
     setFile(null)
@@ -138,7 +141,8 @@ const TaskRow = ({ task, isSelected, onSelect }) => {
                   >
                    <strong>Message to your manager :</strong> 
                   </label>
-                <textarea
+                <textarea ref={messageRef}
+                  onChange={(e)=>{setMessage(e.target.value)}}
                   placeholder="Start typing here..."
                   className="w-full h-32 p-4 bg-gray-100 text-gray-600  rounded-md border border-gray-300 focus:outline-none focus:border-slate-500 focus:ring focus:ring-slate-500 transition hover:shadow-md "
                 ></textarea>

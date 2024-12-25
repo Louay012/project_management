@@ -24,7 +24,7 @@ const Task= () => {
       if(userDetails){
         setUsername(userDetails.username);
         
-      const response= await fetch('http://localhost/TABBE3NI/API/tasks.php' ,{
+      const response= await fetch('http://localhost/Projet_management/API/tasks.php' ,{
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',

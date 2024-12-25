@@ -30,7 +30,7 @@ const TaskRow = ({ task, isSelected, onSelect }) => {
     event.preventDefault();
     
     try{
-          const response=await fetch('http://localhost/TABBE3NI/API/manage_task.php',{
+          const response=await fetch('http://localhost/Projet_management/API/manage_task.php',{
             method:'POST',
             headers:{
               'Content-Type': 'application/json',

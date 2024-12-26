@@ -3,16 +3,19 @@ import React,{ useEffect, useState ,useContext,useRef } from "react";
 import { FaUpload } from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
 import { TbTargetArrow } from "react-icons/tb";
-
+import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
+import { useNavigate } from "react-router-dom";
 // handle_submit 
 const TaskRow = ({ task, isSelected, onSelect }) => {
+  const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
-
+  const [fileName, setFileName] = useState("");
 
    //const { userDetails } = useContext(UserContext);
-   
+  const[canSelect,setcanSelect]=useState(false);
+  
   const messageRef = useRef(null);
   const [error, setError] = useState(null);
 
@@ -22,13 +25,26 @@ const TaskRow = ({ task, isSelected, onSelect }) => {
   let statusClass = "";
 
   if (task.status === "Completed") {
+    
     statusClass = "text-green-500";
   } else if (task.status === "In-Progress") {
     statusClass = "text-yellow-500";
-  } else if (task.status === "Pending") {
+    
+  } else if(task.status === "Awaiting Approval") {
+    statusClass = "text-purple-500";
+  }else{
     statusClass = "text-red-500";
   }
-
+  useEffect(() => {
+    if (file) {
+      setFileName(file.name)
+    }
+  }, [file]);
+  useEffect(() => {
+    if (task.status === "In-Progress" ||task.status === "Rework" ) {
+     setcanSelect(true)
+    }
+  }, [task]);
   const handleSubmit=async (event) => {
     event.preventDefault();
     
@@ -36,27 +52,49 @@ const TaskRow = ({ task, isSelected, onSelect }) => {
       const formData = new FormData();
       formData.append('user_id', 1); 
       formData.append('task_id', task.id); 
-      formData.append('message', message);
+      formData.append('message', message? message:'');
       formData.append('file', file);
-    console.log(message)
+      if(!message && !file){
+        setError("At least message or file to submit task")
+        return;
+    }
+    const result = await Swal.fire({
+      title: 'Confirm Submission Details',
+html: 
+  `<div style="text-align: left;">
+      <p><strong>File:</strong> ${fileName ? fileName : 'No File Selected'}</p>
+      ${message ? `<p><strong>Message:</strong> ${message}</p>` : ''}
+    </div>
+  `,
+icon: 'info',
+showCancelButton: true,
+confirmButtonColor: '#3085d6', 
+cancelButtonColor: '#d33',
+confirmButtonText: 'Yes, Submit!',
+cancelButtonText: 'Cancel',
+});
+  
+    if (result.isConfirmed){
       try {
           // Send the POST request
           const response = await fetch('http://localhost/project_management/src/API/manage_task.php', {
               method: 'POST',
               body: formData, 
+              
           });
       
       const data=await response.json();
      
       if (data.success) {
         
+          Swal.fire('Submitted!',`${data.message}` , 'success');
           hideForm();
           //fetch_Categories();
-            toast.success(data.message, {
+           /* toast.success(data.message, {
             position: 'top-center',
             autoClose: 3000, 
             hideProgressBar: true,
-            closeOnClick: true,});
+            closeOnClick: true,});*/
             
         } else {
         setError(data.message || "Failed to submit task.");
@@ -67,23 +105,37 @@ const TaskRow = ({ task, isSelected, onSelect }) => {
           console.log(err)
         }
         
-        }
+        }navigate(0);
+      }
     
-
+      const showerror=()=>{
+        toast.error(error, {
+          position: 'top-center',
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,});
+      }
+      useEffect(() => {
+        if (error) {
+          showerror();
+          setError(null); 
+        }
+      }, [error]);
+      
   const hideForm = () =>{
     onSelect(null)
     setFile(null)
     setMessage(null)
     messageRef.current.value = ""
-    
+    setFileName(null)
   }
   return (
     <div>
       {/* Task Row */}
       <div
-        className={`flex p-3 mt-2 mb-2   rounded-lg shadow-sm cursor-pointer h-auto     ${
-          isSelected? "bg-gray-300": "bg-gray-100 hover:bg-gray-200"
-        }`}
+        className={`flex p-3 mt-2 mb-2 rounded-lg shadow-sm h-auto 
+          ${canSelect && isSelected ? "bg-gray-300" : "bg-gray-100 hover:bg-gray-200"} 
+          ${canSelect ? "cursor-pointer" : ""}`}
         onClick={() => onSelect(task.id)} // When clicked, toggle selection
         style={{ display: "grid", gridTemplateColumns: "2fr 2fr 3fr 1fr 1fr"}}
       >
@@ -113,14 +165,15 @@ const TaskRow = ({ task, isSelected, onSelect }) => {
       </div>
 
    
-      {isSelected && (
+      {isSelected && canSelect && (
         <div className="bg-white p-3  rounded-lg shadow-md flex justify-around">
           <div className="">
             <h2 className="text-2xl font-semibold text-gray-700">Task: {task.task_title}</h2>
             <p><strong>Project:</strong> {task.project_title}</p>
             <p><strong>Description:</strong> {task.description}</p>
             <p className="flex items-center gap-2"><strong>DeadLine : </strong> <TbTargetArrow></TbTargetArrow> {task.deadline}</p>
-            <p className="flex items-center justify-around gap-2"><strong>Upload your work here :</strong><div className=""> 
+            <p className="flex items-center justify-around gap-2"><strong>Upload your work here :</strong>
+              <div className=""> 
                           <label className="cursor-pointer bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600
                           transition flex items-center justify-center gap-2"  
                           htmlFor="file-upload"><FaUpload></FaUpload>Upload File</label>
@@ -130,8 +183,10 @@ const TaskRow = ({ task, isSelected, onSelect }) => {
                             onChange={handleFileChange}
                             className=" hidden"
                           />
+                         
                         </div ></p>
-            
+                        {fileName && (
+            <p className="mt-2 text-gray-700"><strong>Selected File:</strong> {fileName}</p>)} 
           </div>
           <div className="flex flex-col items-center ">
                 <div  className="  flex flex-col justify-around h-full">

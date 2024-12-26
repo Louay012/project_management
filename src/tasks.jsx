@@ -1,7 +1,7 @@
 import React, { useState,useContext,useEffect } from "react";
 //import { UserContext } from './UserContext';
 import TaskRow from "./taskCard"; // Import TaskRow
-// fetch tasks
+import toast from 'react-hot-toast';
 import Sidebar from "./sidebar";
 import { FaTasks } from "react-icons/fa";
 <link
@@ -48,7 +48,21 @@ const Task= () => {
         } 
         
     }
+    const showerror=()=>{
+      toast.error(error, {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,});
+    }
     useEffect(() => {
+      if (error) {
+        showerror();
+        setError(null); 
+      }
+  }, [error]);
+    
+  useEffect(() => {
       fetch_Tasks()
     },[])  ; 
 

@@ -6,6 +6,7 @@ import Task from './tasks.jsx';
 import  { Toaster } from 'react-hot-toast';
 import Signup from './signup.jsx';
 import Project from './project.jsx';
+import Schedule from './Schedule.jsx';
 const router = createBrowserRouter([
   {
     path:"/",
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
   {
     path:"/tasks",
     element:<Task/>
+  },
+  {
+    path:"/schedule",
+    element:<Schedule/>
   },
   {
     path:"/project/:project_id",

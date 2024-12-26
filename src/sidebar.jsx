@@ -59,11 +59,11 @@ const Sidebar = () => {
         <ul className="mt-4 space-y-2 px-4">
           <li>
             <Link
-              to="/dashboard"
+              to="/schedule"
               className="flex items-center gap-3 p-2 text-gray-700 hover:bg-slate-300 rounded-md no-underline"
             >
               <HomeIcon className="w-6 h-6" />
-              <span>Dashboard</span>
+              <span>Schedule</span>
             </Link>
           </li>
           <li>

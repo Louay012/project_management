@@ -23,7 +23,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                         t.description,
                         t.priority,
                         t.status,
-                        t.deadline
+                        t.deadline,
+                        t.created_at
 
                     FROM 
                         tasks t 
@@ -45,7 +46,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     $stmt=null;
 
 
-    echo json_encode(['success' => true, 'data'=>$tasks ]);
+    echo json_encode(['success' => true, 'tasks'=>$tasks ]);
     }
     catch (Exception $e) {
         // Catch any database-related errors

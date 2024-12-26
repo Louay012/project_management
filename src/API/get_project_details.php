@@ -51,17 +51,31 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     COUNT(CASE WHEN t.status = 'Completed' THEN 1 END) AS completed,
     COUNT(CASE WHEN t.status = 'In-Progress' THEN 1 END) AS in_progress,
     COUNT(CASE WHEN t.status = 'Pending' THEN 1 END) AS pending
-FROM
-    tasks t
-JOIN
-    projects p ON t.project_id = p.project_id
-WHERE
-    p.project_id = :project_id;");
+        FROM
+            tasks t
+        JOIN
+            projects p ON t.project_id = p.project_id
+        WHERE
+            p.project_id = :project_id;");
 
     $stmt2->bindParam(':project_id',$project_id);
     $stmt2->execute();
     $stats = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-    echo json_encode(['success' => true, 'details'=>$details,'tasks'=>$tasks ,'stats'=>$stats ]);
+
+    $stmt3=$pdo->prepare("SELECT
+                        u.user_id id,
+                        u.username,
+                        u.email,
+                        tu.role
+                    from
+                    users u ,teams t , team_users tu ,projects p
+                    WHERE t.project_id = p.project_id and p.project_id=:project_id and tu.team_id=t.team_id and tu.user_id=u.user_id");
+
+    $stmt3->bindParam(':project_id',$project_id);
+  
+    $stmt3->execute();
+    $members = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode(['success' => true, 'details'=>$details,'tasks'=>$tasks ,'stats'=>$stats ,'members'=>$members]);
     $stmt=null;
     $stmt1=null;
     }

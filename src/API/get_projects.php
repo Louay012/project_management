@@ -27,7 +27,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                     from
                     teams t , team_users tu ,projects p
                     WHERE
-                        tu.user_id= :user_id and t.project_id = p.project_id ");
+                       t.team_id=tu.team_id and tu.user_id= :user_id and t.project_id = p.project_id ");
 
     $stmt->bindParam(':user_id',$user_id);
   

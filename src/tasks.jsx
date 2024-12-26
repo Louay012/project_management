@@ -66,7 +66,7 @@ const Task= () => {
 
           {/* Task Column Titles */}
           <div
-            className="flex bg-slate-600 p-3 rounded-lg shadow-md mb-4"
+            className="flex bg-slate-400 p-3 rounded-lg shadow-md mb-4"
             style={{ display: "grid", gridTemplateColumns: "2fr 2fr 3fr 1fr 1fr " }}
           >
             <div className="flex flex-col justify-center items-start"  >

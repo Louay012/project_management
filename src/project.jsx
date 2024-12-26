@@ -10,6 +10,7 @@ import { TbFlagBolt } from "react-icons/tb";
 import { SlCalender } from "react-icons/sl";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from 'chart.js';
 import { TbTargetArrow } from "react-icons/tb";
+import { CgSandClock } from "react-icons/cg";
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 <link
   href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -21,6 +22,7 @@ const Project= () => {
   const [ProjectDetails, setProjectDetails] = useState([]);
   const { project_id } = useParams(); 
   const[tasks,setTasks]=useState([]);
+  const[members,setMembers]=useState([]);
   const [error, setError] = useState(null);
   console.log(project_id)
   const fetch_details=async () => {
@@ -44,13 +46,13 @@ const Project= () => {
               console.log(data.tasks)
               setProjectDetails(data.details);
               setTasks(data.tasks)
+              setMembers(data.members)
               const dataStats=[data.stats[0].completed,data.stats[0].in_progress,data.stats[0].pending];
-              console.log(dataStats)
               setTaskStats({
                 labels: ['Completed', 'In Progress', 'Pending'],
                 datasets: [
                   {
-                    label: 'Task Statuses',
+                    label: 'number of tasks ',
                     data: dataStats,
                     backgroundColor: ['rgba(76, 175, 80, 0.2)', 'rgba(155, 175, 76, 0.1)', 'rgba(62, 90, 167, 0.2)'], // Green, Yellow, Red
                     borderColor: ['rgba(76, 175, 80, 0.6)', 'rgba(155, 175, 76, 0.6)', 'rgba(62, 90, 167, 0.6)'],
@@ -73,48 +75,55 @@ const Project= () => {
     }
     useEffect(() => {
         fetch_details()
-    },[ ])  ; 
+    },[project_id ])  ; 
 
    
 
   return (
-    <div className="w-full min-h-screen flex p-3 bg-slate-200 gap-2">
+    <div className="max-w-screen min-h-screen flex p-3 bg-slate-200 gap-2">
         <Sidebar></Sidebar>
-        <div className="overflow-x-auto flex-1 p-6 bg-gray-50 min-h-screen h-full rounded-lg shadow-md flex flex-col justify-around">
-        {ProjectDetails[0] && <div className="bg-gray-50 p-3 border-1 rounded-lg shadow-md flex justify-around items-center">
-                  <div className="">
-                    
-                    <p className="text-4xl"><strong>Project:</strong> {ProjectDetails[0].project_title}</p>
-                    <p><strong>Description:</strong> {ProjectDetails[0].description}</p>
-                    <p><strong>Created at:</strong> {ProjectDetails[0].created_at}</p>
-                    
-                    
-                  </div>
-                  <div> 
-                    <p ><strong>Status:</strong> <span className={`   font-medium ${
-                    ProjectDetails[0].status ===  "Completed"
-                    ? "text-green-500"
-                    : ProjectDetails[0].status === "In-Progress"
-                    ? "text-yellow-500"
-                    
-                    : "text-blue-500"
-                  }`}>{ProjectDetails[0].status}</span> </p>
-                    <p className="flex items-center gap-2"><strong>DeadLine : </strong> <span className="text-red-500 flex items-center gap-2"><TbTargetArrow></TbTargetArrow> {ProjectDetails[0].deadline}</span> </p>
-                    <p className="flex items-center gap-2"><strong>Days left : </strong> <span className="text-red-500">{ProjectDetails[0].days_until_deadline}</span> </p>
-                  </div>
-                  <div className="w-64 h-52">
-                    <Pie  data={TaskStats} options={{
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                plugins: {
-                                  legend: {
-                                    position: 'top',
-                                  },
-                                },
-                              }} /></div>
+        <div className="overflow-x-auto flex-1 p-6 bg-gray-50 min-h-screen h-full rounded-lg shadow-md flex w-full flex-col justify-around gap-4">
+        {ProjectDetails[0] && <div className="flex items-center justify-around gap-3 flex-col md:flex-row">
+                <div className="bg-gray-50 p-3 border-1 rounded-lg shadow-md flex justify-around w-11/12 md:w-2/5 items-center h-60">
+                        <div className="">
+                          
+                          <p className="text-4xl"><strong>Project:</strong> {ProjectDetails[0].project_title}</p>
+                          <p><strong>Description:</strong> {ProjectDetails[0].description}</p>
+                          <p><strong>Created at:</strong> {ProjectDetails[0].created_at}</p>
+                          
+                          
+                        </div>
+                </div>
+                <div className="bg-gray-50 p-3 border-1 rounded-lg shadow-md flex justify-around w-11/12 md:w-2/5 items-center h-60"> 
+                      <div>
+                          <p ><strong>Status:</strong> <span className={`   font-medium ${
+                          ProjectDetails[0].status ===  "Completed"
+                          ? "text-green-500"
+                          : ProjectDetails[0].status === "In-Progress"
+                          ? "text-yellow-500"
+                          
+                          : "text-blue-500"
+                        }`}>{ProjectDetails[0].status}</span> </p>
+                          <p className="flex items-center gap-2"><strong>DeadLine : </strong> <span className="text-red-500 flex items-center gap-2"><TbTargetArrow></TbTargetArrow> {ProjectDetails[0].deadline}</span> </p>
+                          <p className="flex items-center gap-2"><strong>Days left : </strong> <span className="text-slate-500">{ProjectDetails[0].days_until_deadline} </span> <CgSandClock className="text-slate-500"></CgSandClock></p>
+                      </div>    
+                </div>
                   
-         </div>}
-        <table className="min-w-full border-collapse border border-gray-200 shadow-sm">
+                    <div className="bg-gray-50 p-3 border-1 rounded-lg shadow-md flex justify-center w-11/12 md:w-2/5 items-center h-60">
+                      <Pie  data={TaskStats} options={{
+                                  responsive: true,
+                                  maintainAspectRatio: false,
+                                  plugins: {
+                                    legend: {
+                                      position: 'top',
+                                    },
+                                  },
+                                }} />
+                    </div>
+                  </div>
+         }
+         <span className="text-2xl font-semibold text-slate-800 px-4">Project Tasks :</span> 
+        <table className="w-full border-collapse border border-gray-200 shadow-sm">
         <thead className="bg-gray-100">
           <tr>
             <th className="px-6 py-3 border border-gray-300 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
@@ -181,6 +190,42 @@ const Project= () => {
                  {t.status}
                 </span>
               </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+       <span className="text-2xl font-semibold text-slate-800 px-4">Team Members :</span>   
+      <table className="w-full border-collapse table-responsive border border-gray-200 shadow-sm">
+        <thead className="bg-gray-100">
+          <tr>
+            <th className="px-6 py-3 border border-gray-300 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+            username
+            </th>
+            <th className="px-6 py-3 border border-gray-300 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+            email
+            </th>
+            <th className="px-6 py-3 border border-gray-300 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+            role
+            </th>
+          
+          </tr>
+        </thead>
+        <tbody>
+          {members.map((m) => (
+            <tr
+              key={m.id}
+              
+            >
+              <td className="px-6 py-4 border border-gray-300 text-sm text-gray-900">
+                {m.username}
+              </td>
+              <td className="px-6 py-4 border border-gray-300 text-sm text-gray-900">
+                {m.email}
+              </td>
+              <td className="px-6 py-4 border border-gray-300 text-sm text-gray-900">
+                {m.role}
+              </td>
+              
             </tr>
           ))}
         </tbody>

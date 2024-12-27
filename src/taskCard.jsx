@@ -88,13 +88,8 @@ cancelButtonText: 'Cancel',
       if (data.success) {
         
           Swal.fire('Submitted!',`${data.message}` , 'success');
+          navigate(0);
           hideForm();
-          //fetch_Categories();
-           /* toast.success(data.message, {
-            position: 'top-center',
-            autoClose: 3000, 
-            hideProgressBar: true,
-            closeOnClick: true,});*/
             
         } else {
         setError(data.message || "Failed to submit task.");
@@ -105,7 +100,7 @@ cancelButtonText: 'Cancel',
           console.log(err)
         }
         
-        }navigate(0);
+        }
       }
     
       const showerror=()=>{

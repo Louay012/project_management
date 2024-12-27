@@ -12,8 +12,11 @@ import { FaTasks } from "react-icons/fa";
 const Sidebar = () => {
   const [projects,setProjects]=useState([]);
   const [error, setError] = useState(null);
+ 
    const fetch_Projects=async () => {
-      try{
+      
+    
+    try{
         
           
         const response= await fetch('http://localhost/project_management/src/API/get_projects.php' ,{
@@ -67,13 +70,13 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <Link
-              to="/inbox"
-              className="flex items-center gap-3 p-2 text-gray-700 hover:bg-slate-300 no-underline rounded-md"
+            <div
+              onClick={null}
+              className="flex items-center gap-3 p-2 text-gray-700 cursor-pointer hover:bg-slate-300 no-underline rounded-md"
             >
               <InboxIcon className="w-6 h-6" />
               <span>Inbox</span>
-            </Link>
+            </div>
           </li>
           <li>
             <Link

@@ -69,10 +69,10 @@ const Schedule= () => {
    
 
   return (
-    <div className="max-w-screen min-h-screen flex p-3 bg-slate-200 gap-2">
+    <div className="w-full h-[100vh] flex p-3 bg-slate-200 gap-2">
         <Sidebar></Sidebar>
-       <div className="overflow-x-auto flex-1 p-6 bg-gray-50 min-h-screen h-full rounded-lg shadow-md flex w-full flex-col gap-4">
-       <h1 className="text-2xl font-bold mb-4">Task Scheduler</h1>
+       <div className="overflow-auto flex-1 h-full w-full p-6 ml-56 bg-gray-50   rounded-lg shadow-md flex flex-col   gap-4">
+       <h1 className="text-3xl font-bold text-center">Task Scheduler</h1>
         <Calendar
             localizer={localizer}
             events={events}

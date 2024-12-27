@@ -69,8 +69,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                         u.email,
                         tu.role
                     from
-                    users u ,teams t , team_users tu ,projects p
-                    WHERE t.project_id = p.project_id and p.project_id=:project_id and tu.team_id=t.team_id and tu.user_id=u.user_id");
+                    users u ,teams t , team_users tu 
+                    WHERE t.project_id = :project_id  and tu.team_id=t.team_id and tu.user_id=u.user_id");
 
     $stmt3->bindParam(':project_id',$project_id);
   
@@ -79,6 +79,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     echo json_encode(['success' => true, 'details'=>$details,'tasks'=>$tasks ,'stats'=>$stats ,'members'=>$members]);
     $stmt=null;
     $stmt1=null;
+    $stmt2=null;
+    $stmt3=null;
     }
     catch (Exception $e) {
         // Catch any database-related errors

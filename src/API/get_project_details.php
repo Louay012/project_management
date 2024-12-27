@@ -23,6 +23,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                         p.status,
                         p.deadline,
                         p.created_at,
+                        tu.role role,
                         DATEDIFF(p.deadline, CURDATE())  days_until_deadline
                     from
                     teams t , team_users tu ,projects p

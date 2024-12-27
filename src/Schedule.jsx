@@ -66,7 +66,9 @@ const Schedule= () => {
         fetch_details()
     },[tasks])  ; 
 
-   
+    const CustomTimeHeader = () => {
+      return null; // Return nothing to effectively hide the time column
+    };
 
   return (
     <div className="w-full h-[100vh] flex p-3 bg-slate-200 gap-2">
@@ -80,13 +82,16 @@ const Schedule= () => {
             endAccessor="end"
             style={{ height: 500, margin: '50px' }}
             selectable
+            views={['month', 'agenda','week']}
             formats={{
-              dayFormat: (date, culture, localizer) =>
-                localizer.format(date, 'dddd', culture), // Show only the day of the week (e.g., "Monday")
-              timeGutterFormat: () => '', // Hide the time gutter completely
+              dateFormat: 'dd MMM',  // This will display only the day and month
+              dayFormat: 'ddd, MMM '  // Display only the day and month on days
             }}
             showMultiDayTimes={false}
             popup 
+            components={{
+              timeSlot: null, // Use custom time component
+            }}
         />
 
        </div>

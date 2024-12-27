@@ -4,6 +4,7 @@ import TaskRow from "./taskCard"; // Import TaskRow
 import toast from 'react-hot-toast';
 import Sidebar from "./sidebar";
 import { FaTasks } from "react-icons/fa";
+import { MdOutlineNotStarted } from "react-icons/md";
 <link
   href="https://fonts.googleapis.com/icon?family=Material+Icons"
   rel="stylesheet"
@@ -12,8 +13,11 @@ import { FaTasks } from "react-icons/fa";
 const Task= () => {
   const [tasks, setTasks] = useState([]);
   //const { userDetails } = useContext(UserContext);
-
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null); 
+    const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const[username,setUsername]=useState('');
+
   const [error, setError] = useState(null);
 
   const fetch_Tasks=async () => {
@@ -33,8 +37,8 @@ const Task= () => {
         const data = await response.json();
       
             if (data.success) {
-              console.log(data.data)
-                setTasks(data.data);
+
+                setTasks(data.tasks);
              
             }
              else {
@@ -65,7 +69,7 @@ const Task= () => {
   useEffect(() => {
       fetch_Tasks()
     },[])  ; 
-
+  
   const [selectedTaskId, setSelectedTaskId] = useState(null); // Track selected task
   console.log(selectedTaskId)
   const handleTaskSelect = (taskId) => {
@@ -105,15 +109,34 @@ const Task= () => {
           </div>
 
           {/* Task List */}
-          <div className="space-y-5">
-            {tasks.map((task) => (
-              <TaskRow
+          <div className="space-y-5 " >
+            {tasks && tasks.map((task) => (
+              <TaskRow  
                 key={task.id}
                 task={task}
                 isSelected={selectedTaskId === task.id} // Check if task is selected
                 onSelect={handleTaskSelect} // Handle task click
+                setIsMenuVisible={setIsMenuVisible}
+                setSelectedTask={setSelectedTask}
+                setMenuPosition={setMenuPosition}
               />
             ))}
+           {isMenuVisible && (
+                   <div
+                     className="absolute z-50 bg-white border border-gray-300 rounded-lg shadow-md list-none"
+                     style={{ top: menuPosition.y, left: menuPosition.x }}
+                   >
+                     <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer flex items-center gap-2">
+                       <span className="text-green-500"><MdOutlineNotStarted></MdOutlineNotStarted></span> Start task
+                     </li>
+                     <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                       Edit Task
+                     </li>
+                     <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                       Delete Task
+                     </li>
+                   </div>
+                 )}   
           </div>
         </div>
     </div>

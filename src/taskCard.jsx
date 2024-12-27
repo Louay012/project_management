@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 // handle_submit 
-const TaskRow = ({ task, isSelected, onSelect }) => {
+const TaskRow = ({ task, isSelected, onSelect, setSelectedTask,setIsMenuVisible,setMenuPosition }) => {
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
@@ -124,10 +124,24 @@ cancelButtonText: 'Cancel',
     messageRef.current.value = ""
     setFileName(null)
   }
+   
+  const handleContextMenu = (event, task) => {
+    
+    event.preventDefault();
+    console.log(task)
+    setSelectedTask(task); // Set the selected task
+    setMenuPosition({ x: event.pageX, y: event.pageY  });
+    setIsMenuVisible(true);
+  };
+
+  // Hide the menu
+  const handleClick = () => {
+    
+  };  
   return (
     <div>
       {/* Task Row */}
-      <div
+      <div onContextMenu={(event) => handleContextMenu(event, task)}
         className={`flex p-3 mt-2 mb-2 rounded-lg shadow-sm h-auto 
           ${canSelect && isSelected ? "bg-gray-300" : "bg-gray-100 hover:bg-gray-200"} 
           ${canSelect ? "cursor-pointer" : ""}`}
@@ -159,7 +173,7 @@ cancelButtonText: 'Cancel',
         </div>
       </div>
 
-   
+      
       {isSelected && canSelect && (
         <div className="bg-white p-3  rounded-lg shadow-md flex justify-around">
           <div className="">

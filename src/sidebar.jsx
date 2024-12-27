@@ -9,6 +9,7 @@ import {
   FolderIcon ,
   UserCircleIcon
 } from "@heroicons/react/outline";
+import { IoIosNotifications } from "react-icons/io";
 import { FaTasks } from "react-icons/fa";
 const Sidebar = () => {
   
@@ -115,7 +116,7 @@ const Sidebar = () => {
             }
         }, [error]);
   return (
-    <div className="h-screen w-56 bg-slate-200  flex flex-col rounded">
+    <div className="h-[100vh] w-56 bg-slate-200  flex flex-col rounded fixed left-0 top-0 bottom-0 ">
       {/* Logo */}
       <div className="px-6 py-4 border-b">
         <h1 className="text-lg font-bold text-gray-800">TaskFlow</h1>
@@ -194,44 +195,53 @@ const Sidebar = () => {
         </div>
       </div>
       
-      {isInboxOpen && (
-  <div ref={panelRef} className="fixed top-0 left-60 h-screen w-80 bg-white border-l border-gray-300 shadow-lg p-5 z-50">
-    <h2 className="text-lg font-bold text-gray-700">Notifications</h2>
-    <hr className="my-3" />
-    <div className="overflow-y-auto h-full">
-      {(selfProjects.length > 0 || tasks.length > 0) ? (
-        <ul className="space-y-3">
-          {selfProjects.length > 0 && 
+      <div
+  ref={panelRef}
+  className={`fixed top-0 left-0 rounded-lg h-screen w-60 bg-white border-l border-gray-300 shadow-2xl px-2 py-5 z-50 transform transition-transform duration-700 ease-in-out ${
+    isInboxOpen ? "translate-x-0" : "-translate-x-full"
+  }`}
+>
+  <h2 className="text-xl font-bold text-gray-700 flex items-center gap-2"><IoIosNotifications></IoIosNotifications> Notifications</h2>
+  <hr className="my-3" />
+  <div className="overflow-y-auto h-full">
+    {selfProjects.length > 0 || tasks.length > 0 ? (
+      <ul className="">
+        {selfProjects.length > 0 &&
           selfProjects.map((project) => (
-            
-            
-            <li onClick={toggleInbox} key={project.id} className="hover:bg-slate-100 cursor-pointer p-2" >
-              <Link 
-                  to={`/project/${project.id}`}
-                  className="text-sm text-gray-600  no-underline"
+            <li
+              onClick={toggleInbox}
+              key={project.id}
+              className="hover:bg-slate-100 cursor-pointer p-2"
+            >
+              <Link
+                to={`/project/${project.id}`}
+                className="text-sm text-gray-600 no-underline"
               >
-              The Project <strong> {project.project_title}</strong> has Tasks to review
+                The Project <strong>{project.project_title}</strong> has Tasks to
+                review
               </Link>
             </li>
-            
-          ))
-        }
-          {tasks.length> 0  && 
-          <li onClick={toggleInbox} className="hover:bg-slate-100 cursor-pointer p-2">
-            <Link to={"/tasks"} 
-                  className="text-sm text-gray-600  no-underline">
+          ))}
+        {tasks.length > 0 && (
+          <li
+            onClick={toggleInbox}
+            className="hover:bg-slate-100 cursor-pointer p-2"
+          >
+            <Link
+              to={"/tasks"}
+              className="text-sm text-gray-600 no-underline"
+            >
               <strong>There are Tasks to do</strong>
-              </Link>
+            </Link>
           </li>
-          }
-        </ul>
-      ) : (
-        <p className="text-sm text-gray-500">No Notifications.</p>
-      )}
-    </div>
-    
+        )}
+      </ul>
+    ) : (
+      <p className="text-sm text-gray-500">No Notifications.</p>
+    )}
   </div>
-)}
+</div>
+
     </div>
 
 

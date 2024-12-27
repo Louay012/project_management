@@ -80,9 +80,9 @@ const Project= () => {
    
 
   return (
-    <div className="max-w-screen min-h-screen flex p-3 bg-slate-200 gap-2">
+    <div className="w-full h-[100vh] flex p-3 bg-slate-200 gap-2">
         <Sidebar></Sidebar>
-        <div className="overflow-x-auto flex-1 p-6 bg-gray-50 min-h-screen h-full rounded-lg shadow-md flex w-full flex-col justify-around gap-4">
+        <div className="overflow-auto flex-1 p-6 ml-56 bg-gray-50  h-full rounded-lg shadow-md flex w-full flex-col justify-around gap-4">
         {ProjectDetails[0] && <div className="flex items-center justify-around gap-3 flex-col md:flex-row">
                 <div className="bg-gray-50 p-3 border-1 rounded-lg shadow-md flex justify-around w-11/12 md:w-2/5 items-center h-60">
                         <div className="">

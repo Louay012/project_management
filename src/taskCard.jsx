@@ -146,7 +146,7 @@ cancelButtonText: 'Cancel',
           ${canSelect && isSelected ? "bg-gray-300" : "bg-gray-100 hover:bg-gray-200"} 
           ${canSelect ? "cursor-pointer" : ""}`}
         onClick={() => onSelect(task.id)} // When clicked, toggle selection
-        style={{ display: "grid", gridTemplateColumns: "2fr 2fr 3fr 1fr 1fr"}}
+        style={{ display: "grid", gridTemplateColumns: "2fr 2fr 2fr 1fr 2fr 2fr"}}
       >
         <div className="flex flex-col justify-center items-start" >
           <span className="font-medium text-gray-700">{task.project_title}</span>
@@ -155,12 +155,14 @@ cancelButtonText: 'Cancel',
         <div className="flex flex-col justify-center items-start ">
           <span className="font-medium text-gray-700">{task.task_title}</span>
         </div>
-
+        
         <div className="flex flex-col justify-center items-start">
           <span className="text-gray-600">{task.description}</span>
         </div>
 
-        
+        <div className="flex flex-col justify-center items-start">
+          <span className="text-gray-600">{task.priority}</span>
+        </div>
         
         <div className="flex flex-col justify-center items-start">
           <span className={`font-medium ${statusClass}`}>

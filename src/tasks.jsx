@@ -85,7 +85,7 @@ const Task= () => {
           {/* Task Column Titles */}
           <div
             className="flex bg-slate-400 p-3 rounded-lg shadow-md mb-4"
-            style={{ display: "grid", gridTemplateColumns: "2fr 2fr 3fr 1fr 1fr " }}
+            style={{ display: "grid", gridTemplateColumns: "2fr 2fr 2fr 1fr 2fr 2fr " }}
           >
             <div className="flex flex-col justify-center items-start"  >
               <span className="font-bold text-gray-100">Project </span>
@@ -97,6 +97,10 @@ const Task= () => {
 
             <div className="flex flex-col justify-center items-start"  >
               <span className="font-bold text-gray-100">Description</span>
+            </div>
+
+            <div className="flex flex-col justify-center items-start"  >
+              <span className="font-bold text-gray-100">Priority</span>
             </div>
 
             <div className="flex flex-col justify-center items-start"  >

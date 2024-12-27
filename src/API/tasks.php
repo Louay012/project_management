@@ -24,7 +24,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                         t.priority,
                         t.status,
                         t.deadline,
-                        t.created_at
+                        t.created_at,
+                        t.review
 
                     FROM 
                         tasks t 

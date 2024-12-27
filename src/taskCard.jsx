@@ -12,7 +12,7 @@ const TaskRow = ({ task, isSelected, onSelect, setSelectedTask,setIsMenuVisible,
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("");
-
+  
    //const { userDetails } = useContext(UserContext);
   const[canSelect,setcanSelect]=useState(false);
   
@@ -41,14 +41,14 @@ const TaskRow = ({ task, isSelected, onSelect, setSelectedTask,setIsMenuVisible,
     }
   }, [file]);
   useEffect(() => {
-    if (task.status === "In-Progress" ||task.status === "Rework" ) {
+    if (task.status === "In-Progress" ||task.status === "Refused" ) {
      setcanSelect(true)
     }
   }, [task]);
   const handleSubmit=async (event) => {
     event.preventDefault();
     
-    
+
       const formData = new FormData();
       formData.append('user_id', 1); 
       formData.append('task_id', task.id); 
@@ -97,7 +97,7 @@ cancelButtonText: 'Cancel',
               }
         } catch (err) {
             setError("An error occurred while submitting task.");
-          console.log(err)
+     
         }
         
         }
@@ -181,6 +181,7 @@ cancelButtonText: 'Cancel',
             <p><strong>Project:</strong> {task.project_title}</p>
             <p><strong>Description:</strong> {task.description}</p>
             <p className="flex items-center gap-2"><strong>DeadLine : </strong> <TbTargetArrow></TbTargetArrow> {task.deadline}</p>
+            {task.status === "Refused" && <p className="text-red-600"><strong>Manager Review-Message: </strong>{task.review}</p>}
             <p className="flex items-center justify-around gap-2"><strong>Upload your work here :</strong>
               <div className=""> 
                           <label className="cursor-pointer bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600

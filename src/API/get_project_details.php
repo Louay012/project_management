@@ -13,7 +13,7 @@ session_start();
 if($_SERVER['REQUEST_METHOD']=='POST'){
     $input = json_decode(file_get_contents("php://input"), true);
     $project_id = $input['project_id']  ;
-   
+    $user_id = $input['user_id']  ;
 
    try {
     $stmt=$pdo->prepare("SELECT
@@ -27,10 +27,10 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                         DATEDIFF(p.deadline, CURDATE())  days_until_deadline
                     from
                     teams t , team_users tu ,projects p
-                    WHERE t.project_id = p.project_id and p.project_id=:project_id");
+                    WHERE t.project_id = p.project_id and p.project_id=:project_id and tu.user_id=:user_id ");
 
     $stmt->bindParam(':project_id',$project_id);
-  
+    $stmt->bindParam(':user_id',$user_id);
     $stmt->execute();
     $details = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $stmt1=$pdo->prepare("SELECT
@@ -76,7 +76,33 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
   
     $stmt3->execute();
     $members = $stmt3->fetchAll(PDO::FETCH_ASSOC);
-    echo json_encode(['success' => true, 'details'=>$details,'tasks'=>$tasks ,'stats'=>$stats ,'members'=>$members]);
+    $stmt4=$pdo->prepare("SELECT
+                        ts.submission_id id,
+                        p.title project_title,
+                        t.task_id id,
+                        t.title task_title,
+                        t.description,
+                        t.priority,
+                        t.status,
+                        t.deadline,
+                        t.created_at,
+                        t.review,
+                        ts.message,
+                        ts.file_path,
+                        ts.submitted_at,
+                        u.username,
+                        u.email
+                    FROM 
+                        tasks t , task_submissions ts,projects p,users u
+                  
+                     WHERE
+                        p.project_id = t.project_id and t.user_id= :user_id and u.user_id=t.user_id and t.task_id=ts.task_id and t.project_id =:project_id ");
+
+    $stmt4->bindParam(':user_id',$user_id);
+    $stmt4->bindParam(':project_id',$project_id);
+    $stmt4->execute();
+    $Sub_tasks = $stmt4->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode(['success' => true, 'details'=>$details,'tasks'=>$tasks ,'stats'=>$stats ,'members'=>$members ,'Sub_tasks'=>$Sub_tasks]);
     $stmt=null;
     $stmt1=null;
     $stmt2=null;

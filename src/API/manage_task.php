@@ -17,7 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $task_id = $_POST['task_id'];
     $message = $_POST['message'];
 
-    $uploadDir = "uploads/";
+    $uploadDir = "C:/xampp/htdocs/project_management/public/uploads/";
+
     
 
     if (!is_dir($uploadDir)) {

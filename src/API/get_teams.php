@@ -19,6 +19,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
     $stmt=$pdo->prepare(
                     "SELECT
+                        count(u.user_id) as nb_user,
                         u.user_id,
                         u.username username,
                         u.email email,
@@ -42,6 +43,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                         t.project_id=p.project_id
                     WHERE 
                         t.team_id in (select team_id from team_users where user_id=:user_id)
+                    GROUP BY
+                        t.team_id, p.title
                     
                     ");
 
@@ -57,6 +60,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                 'team_id' => $team_id,
                 'team_name' => $row['team_name'],
                 'project_title' => $row['project_title'],
+                'nb_user' => $row['nb_user'],
                 'members' => []
             ];
         }

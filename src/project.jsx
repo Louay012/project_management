@@ -57,7 +57,7 @@ const Project= () => {
   document.addEventListener("mouseup", handleClickOutside);
   const handleReviewTask=(ts)=>{
     setSelectedTask(ts);
-    console.log("Selected Task:", selectedTask);
+
   }
   const handleCloseReviewForm = () => {
     setSelectedTask(null);
@@ -69,19 +69,29 @@ const Project= () => {
   const [taskDeadline, setTaskDeadline] = useState('');
   const [taskMember, settaskMember] = useState('');
   const [taskPriority, setTaskPriority] = useState("Low");
+  const [memberEmail, setMemberEmail] = useState("");
   const hideAddTaskForm=()=>{
     setShowAddTask(false);
     formRef.current.reset();
   }
     const showAddTaskForm=()=>{
       setShowAddTask(true);
-      setShowAddMember(false);
+
+  }
+  const hideAddMemberForm=()=>{
+    setShowAddMember(false);
+    formRef.current.reset();
+  }
+    const showAddMemberForm=()=>{
+      setShowAddMember(true);
+
   }
   const handleTitleChange = (e) => setTaskTitle(e.target.value);
   const handleDescriptionChange = (e) => setTaskDescription(e.target.value);
   const handleDeadlineChange = (e) => setTaskDeadline(e.target.value);
   const handlePriorityChange = (e) => setTaskPriority(e.target.value);
   const handletaskMemberChange = (e) => settaskMember(e.target.value);
+  const handleMemberEmailChange = (e) => setMemberEmail(e.target.value);
   const handleAddTask=async (event) => {
     event.preventDefault();
     try{
@@ -126,6 +136,48 @@ const Project= () => {
     }
       
     hideAddTaskForm() 
+  }
+  const handleAddMember=async (event) => {
+    event.preventDefault();
+    console.log("add member")
+    try{
+      
+      const response=await fetch('http://localhost/project_management/src/API/add_member.php',{
+        method:'POST',
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        body:JSON.stringify({
+          email:memberEmail,
+          
+        })
+      })
+      
+      const data=await response.json();
+  
+      
+      if (data.success) {
+        fetch_details()
+        toast.success(data.message, {
+          position: 'top-center',
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+        });      
+      } else {
+        toast.error(data.message || "Failed to send invitation.", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+        });
+      }
+      
+    } catch (err) {
+      setError("An error occurred while adding a budget.");
+    }
+      
+    hideAddMemberForm() 
   }
   const fetch_details=async () => {
     try{
@@ -287,18 +339,65 @@ const Project= () => {
                 </select>
               </div>
               <div className="flex justify-between mt-6">
+              <button
+                  type="button"
+                  onClick={hideAddTaskForm}
+                  className="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
                 <button
                   type="submit"
                   className="bg-gradient-to-r from-slate-500 to-slate-600 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:from-slate-600 hover:to-slate-500"
                 >
                   Add Task
                 </button>
+                
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {showAddMember && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
+          <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+            <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">
+              Add New Member
+            </h2>
+            <form ref={formRef} onSubmit={handleAddMember} className="flex flex-col justify-between gap-2">
+              <div>
+                <label
+                  htmlFor="member_email"
+                  className="block text-lg font-medium text-gray-700"
+                >
+                  Email
+                </label>
+                <input
+                  id="member_email"
+                  type="email"
+                  value={memberEmail}
+                  onChange={handleMemberEmailChange}
+                  className="mt-2 p-3 w-full border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-600"
+                  placeholder="example@example.com"
+                  required
+                />
+              </div>
+
+              
+              <div className="flex justify-between mt-6">
+                
                 <button
                   type="button"
-                  onClick={hideAddTaskForm}
+                  onClick={hideAddMemberForm}
                   className="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-400"
                 >
                   Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-gradient-to-r from-slate-500 to-slate-600 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:from-slate-600 hover:to-slate-500"
+                >
+                  invite
                 </button>
               </div>
             </form>
@@ -424,7 +523,7 @@ const Project= () => {
       <div className="flex items-center justify-around">
         <span className="text-2xl font-semibold text-slate-800 px-4">Team Members :</span>   
         {ProjectDetails.length > 0 && ProjectDetails[0].role==="manager" && 
-        <button className="btn btn-dark "><span className="flex items-center gap-2"><IoAddCircleSharp/>Add member</span></button>}
+        <button className="btn btn-dark " onClick={showAddMemberForm}><span className="flex items-center gap-2"><IoAddCircleSharp/>Add member</span></button>}
        </div>
       <table className="w-full border-collapse table-responsive border border-gray-200 shadow-sm">
         <thead className="bg-gray-100">

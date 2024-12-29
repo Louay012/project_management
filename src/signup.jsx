@@ -14,7 +14,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gradient-to-r from-gray-50  to-emerald-50">
+    <div className="h-screen flex items-center justify-center bg-gradient-to-r from-gray-50  to-slate-200">
 
       <div className="bg-white p-8 rounded-lg shadow-lg w-5/6 max-w-full space-y-6 h-5/6 flex items-center justify-around">
         <img src={img} alt='' className='w-1/2'></img>
@@ -32,7 +32,7 @@ const Signup = () => {
                     name="username" 
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                    className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400" 
                     required 
                     />
                 </div>
@@ -44,7 +44,7 @@ const Signup = () => {
                     name="email" 
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                    className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400" 
                     required 
                     />
                 </div>
@@ -56,7 +56,7 @@ const Signup = () => {
                     name="password" 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                    className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400" 
                     required 
                     />
                 </div>
@@ -64,7 +64,7 @@ const Signup = () => {
                 <button 
                     type="submit" 
                     className="w-full py-3 bg-zinc-800 text-white font-semibold flex items-center justify-center gap-2
-                    rounded-md hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    rounded-md hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-slate-400"
                 >
                   <i><IoIosLogIn className='h-8 w-6'></IoIosLogIn></i>
                     Sign up

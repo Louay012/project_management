@@ -16,7 +16,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
    
 
    try {
-    $stmt=$pdo->prepare("SELECT
+    $stmt=$pdo->prepare("SELECT DISTINCT
                         p.title project_title,
                         p.project_id id,
                         p.description,

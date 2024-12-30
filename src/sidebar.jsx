@@ -195,8 +195,7 @@ const Sidebar = () => {
         </div>
       </div>
       
-      <div
-  ref={panelRef}
+      <div ref={panelRef}
   className={`fixed top-0 left-0 rounded-lg h-screen w-60 bg-white border-l border-gray-300 shadow-2xl px-2 py-5 z-50 transform transition-transform duration-700 ease-in-out ${
     isInboxOpen ? "translate-x-0" : "-translate-x-full"
   }`}

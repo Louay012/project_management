@@ -1,6 +1,7 @@
 import React, { useState,useContext,useEffect } from "react";
 //import { UserContext } from './UserContext';
 import TaskRow from "./taskCard"; 
+import TeamCard from "./Team_card";
 import toast from 'react-hot-toast';
 import Sidebar from "./sidebar";
 import {UserGroupIcon} from "@heroicons/react/outline"
@@ -36,6 +37,7 @@ const Task= () => {
       
             if (data.success) {
                setTeams(data.data)
+               console.log(data.data)
             }
              else {
             setError(data.message || "Failed to fetch Teams.");
@@ -72,15 +74,14 @@ const Task= () => {
         <div className="flex-1 p-6 bg-gray-50 h-full rounded-lg shadow-md ml-56 overflow-auto">
           <h1 className="text-3xl font-semibold mb-6 flex items-center gap-2"> <UserGroupIcon className="h-9 w-9"/> Team Management</h1>
           
-          {true ? (
-  teams.map((team) => (
-    <div key={team.team_id} className="mb-6">
-      {/* Team Title */}
-      <span className="text-2xl font-semibold text-slate-800 px-4">
-        Projet: {team.project_title}
-      </span>
-
-      {/* Members Table */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 p-4">
+            {teams.map((team) => (
+              <TeamCard key={team.team_id} name={team.team_name} initial={team.team_name[0] } project={team.project_title}
+               nb_user={team.nb_user}/>
+            ))}
+          </div>
+    
+      {/* Members Table 
       <table className="w-full border-collapse table-responsive border border-gray-200 shadow-sm mt-4">
         <thead className="bg-gray-100">
           <tr>
@@ -110,14 +111,11 @@ const Task= () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table>*/}
     </div>
-  ))
-) : (
-  <p className="text-sm text-gray-500 mt-4">No teams available.</p>
-)}
 
-    </div>
+
+   
         
 
           

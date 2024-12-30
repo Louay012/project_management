@@ -82,7 +82,7 @@ const Project= () => {
           closeOnClick: true,
         });      
       } else {
-        toast.error(data.message || "Failed to add budgets.", {
+        toast.error(data.message || "Failed to add Task.", {
           position: "top-center",
           autoClose: 3000,
           hideProgressBar: true,
@@ -91,7 +91,7 @@ const Project= () => {
       }
       
     } catch (err) {
-      setError("An error occurred while adding a budget.");
+      setError("An error occurred while adding a Task.");
     }
       
     hideAddTaskForm() 
@@ -134,12 +134,12 @@ const Project= () => {
               
             }
              else {
-            setError(data.message || "Failed to fetch Tasks.");
+            setError(data.message || "Failed to fetch Project Details.");
 
             }
           
         } catch (err) {
-            setError("An error occurred while fetching Tasks." );
+            setError("An error occurred while fetching Project Details." );
             
         } 
         

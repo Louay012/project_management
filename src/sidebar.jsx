@@ -61,12 +61,12 @@ const Sidebar = () => {
                
               }
                else {
-              setError(data.message || "Failed to fetch Tasks.");
+              setError(data.message || "Failed to fetch Projects.");
   
               }
             
           } catch (err) {
-              setError("An error occurred while fetching Tasks." );
+              setError("An error occurred while fetching Projects." );
               
           } 
           

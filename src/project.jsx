@@ -67,10 +67,15 @@ const Project= () => {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [taskDeadline, setTaskDeadline] = useState('');
-  const [taskMember, settaskMember] = useState('');
+  const [taskMember, settaskMember] = useState(null);
   const [taskPriority, setTaskPriority] = useState("Low");
   const [memberEmail, setMemberEmail] = useState("");
   const hideAddTaskForm=()=>{
+    setTaskTitle('')
+    setTaskDescription('');
+    setTaskDeadline('');
+    setTaskPriority('low');
+    settaskMember(1)
     setShowAddTask(false);
     formRef.current.reset();
   }
@@ -95,7 +100,7 @@ const Project= () => {
   const handleAddTask=async (event) => {
     event.preventDefault();
     try{
-      
+      console.log(taskMember)
       const response=await fetch('http://localhost/project_management/src/API/add_task.php',{
         method:'POST',
         headers:{
@@ -105,7 +110,7 @@ const Project= () => {
           title:taskTitle,
           description:taskDescription,
           priority:taskPriority,
-          user:taskMember.split(':')[0],
+          user:taskMember,
           deadline:taskDeadline,
           project_id:project_id
         })
@@ -134,7 +139,7 @@ const Project= () => {
     } catch (err) {
       setError("An error occurred while adding a budget.");
     }
-      
+   
     hideAddTaskForm() 
   }
   const handleAddMember=async (event) => {
@@ -180,6 +185,7 @@ const Project= () => {
     hideAddMemberForm() 
   }
   const fetch_details=async () => {
+    //setSubTasks([])
     try{
       
         
@@ -202,6 +208,7 @@ const Project= () => {
               setTasks(data.tasks)
               setMembers(data.members)
               setSubTasks(data.Sub_tasks)
+              console.log(SubTasks)
               const dataStats=[data.stats[0].completed,data.stats[0].in_progress,data.stats[0].pending];
               setTaskStats({
                 labels: ['Completed', 'In Progress', 'Pending'],
@@ -306,6 +313,7 @@ const Project= () => {
                   Member
                 </label>
                 <select
+                
                   id="taskPriority"
                   value={taskMember}
                   onChange={handletaskMemberChange}
@@ -315,7 +323,7 @@ const Project= () => {
                   
                 >
                   
-                  {members.map((m)=><option>{m.id + " : " + m.username}</option>)}
+                  {members.map((m)=><option key={m.id} value={m.id}>{m.id + " : " + m.username}</option>)}
                 </select>
               </div>
               <div className="flex flex-col gap-2">
@@ -588,7 +596,7 @@ const Project= () => {
         <tbody>
           {SubTasks.map((st) => (st.status === "Awaiting Approval" &&
             <tr
-              key={st.id}
+              key={st.submission_id}
               
             >
               <td className="px-6 py-4 border border-gray-300 text-sm text-gray-900">

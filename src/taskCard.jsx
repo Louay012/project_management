@@ -32,8 +32,10 @@ const TaskRow = ({ task, isSelected, onSelect, setSelectedTask,setIsMenuVisible,
     
   } else if(task.status === "Awaiting Approval") {
     statusClass = "text-purple-500";
-  }else{
+  }else if(task.status === "Refused") {
     statusClass = "text-red-500";
+  }else{
+    statusClass = "text-blue-500";
   }
   useEffect(() => {
     if (file) {
@@ -124,7 +126,9 @@ cancelButtonText: 'Cancel',
     messageRef.current.value = ""
     setFileName(null)
   }
-   
+  
+  
+
   const handleContextMenu = (event, task) => {
     
     event.preventDefault();
@@ -141,9 +145,11 @@ cancelButtonText: 'Cancel',
   return (
     <div>
       {/* Task Row */}
-      <div onContextMenu={(event) => handleContextMenu(event, task)}
+      <div {...(task.status === 'Pending' && { onContextMenu: (event) => handleContextMenu(event, task) })}
         className={`flex p-3 mt-2 mb-2 rounded-lg shadow-sm h-auto 
           ${canSelect && isSelected ? "bg-gray-300" : "bg-gray-100 hover:bg-gray-200"} 
+          ${task.status==="Refused" ? "bg-red-100 hover:bg-red-200" :""}
+          ${task.status==="Completed" ? "bg-green-100 hover:bg-green-200" :""}
           ${canSelect ? "cursor-pointer" : ""}`}
         onClick={() => onSelect(task.id)} // When clicked, toggle selection
         style={{ display: "grid", gridTemplateColumns: "2fr 2fr 2fr 1fr 2fr 2fr"}}
@@ -161,21 +167,28 @@ cancelButtonText: 'Cancel',
         </div>
 
         <div className="flex flex-col justify-center items-start">
-          <span className="text-gray-600">{task.priority}</span>
+        <span className={`px-3 py-1  font-medium  ${
+                task.priority === "high"
+                        ? "text-red-500 "
+                        : task.priority === "medium"
+                        ? "text-yellow-500 "
+                        
+                        : "text-blue-500 "
+              }`}> {task.priority}</span>
         </div>
         
-        <div className="flex flex-col justify-center items-start">
-          <span className={`font-medium ${statusClass}`}>
-            {task.status}
-          </span>
-        </div>
+        
 
         <div className="flex flex-col justify-center items-start ">
           <span className="font-medium text-gray-700 flex items-center gap-2"><SlCalender></SlCalender>{task.deadline}</span>
         </div>
-      </div>
-
-      
+     
+      <div className="flex flex-col justify-center items-start">
+          <span className={`font-medium ${statusClass}`}>
+            {task.status}
+          </span>
+        </div>          
+        </div>
       {isSelected && canSelect && (
         <div className="bg-white p-3  rounded-lg shadow-md flex justify-around">
           <div className="">

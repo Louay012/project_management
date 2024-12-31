@@ -77,26 +77,33 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     $stmt3->execute();
     $members = $stmt3->fetchAll(PDO::FETCH_ASSOC);
     $stmt4=$pdo->prepare("SELECT
-                        ts.submission_id id,
-                        p.title project_title,
-                        t.task_id id,
-                        t.title task_title,
-                        t.description,
-                        t.priority,
-                        t.status,
-                        t.deadline,
-                        t.created_at,
-                        t.review,
-                        ts.message,
-                        ts.file_path,
-                        ts.submitted_at,
-                        u.username,
-                        u.email
-                    FROM 
-                        tasks t , task_submissions ts,projects p,users u
-                  
-                     WHERE
-                        p.project_id = t.project_id and t.user_id= :user_id and u.user_id=t.user_id and t.task_id=ts.task_id and t.project_id =:project_id ");
+    ts.submission_id AS submission_id,
+    p.title AS project_title,
+    t.task_id AS task_id,
+    t.title AS task_title,
+    t.description,
+    t.priority,
+    t.status,
+    t.deadline,
+    t.created_at,
+    t.review,
+    ts.message,
+    ts.file_path,
+    ts.submitted_at,
+    u.username,
+    u.email
+FROM 
+    tasks t
+JOIN 
+    projects p ON p.project_id = t.project_id
+JOIN 
+    users u ON u.user_id = t.user_id
+JOIN 
+    task_submissions ts ON t.task_id = ts.task_id
+WHERE
+    t.project_id = :project_id 
+    AND t.user_id = :user_id;"
+);
 
     $stmt4->bindParam(':user_id',$user_id);
     $stmt4->bindParam(':project_id',$project_id);

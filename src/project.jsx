@@ -51,7 +51,7 @@ const Project= () => {
       !panelRef.current.contains(event.target) 
       
     ) {
-      setSelectedTask(null);
+      handleCloseReviewForm();
     }
   };
   document.addEventListener("mouseup", handleClickOutside);
@@ -61,7 +61,60 @@ const Project= () => {
   }
   const handleCloseReviewForm = () => {
     setSelectedTask(null);
+    setMessage("")
   };
+
+  const[message,setMessage]=useState("");
+  const handleApprove=async(status)  =>{
+    if (!message){
+      setError("the message must not be empty")
+      return;
+    }
+  
+    try{
+      
+      const response=await fetch('http://localhost/project_management/src/API/Approve_task.php',{
+        method:'POST',
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        body:JSON.stringify({
+          task_id:selectedTask.task_id,
+          review:message,
+          status:status
+        })
+      })
+      
+      const data=await response.json();
+  
+      
+      if (data.success) {
+        fetch_details()
+        toast.success(data.message, {
+          position: 'top-center',
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+        });      
+      } else {
+        toast.error(data.message || "Failed to add Task.", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+        });
+      }
+      
+    } catch (err) {
+      setError("An error occurred while sending Review.");
+    }
+   
+    handleCloseReviewForm()
+  }
+
+  
+
+
   const [showAddMember, setShowAddMember] = useState(false);
   const [showAddTask, setShowAddTask] = useState(false);
   const [taskTitle, setTaskTitle] = useState('');
@@ -97,6 +150,7 @@ const Project= () => {
   const handlePriorityChange = (e) => setTaskPriority(e.target.value);
   const handletaskMemberChange = (e) => settaskMember(e.target.value);
   const handleMemberEmailChange = (e) => setMemberEmail(e.target.value);
+  
   const handleAddTask=async (event) => {
     event.preventDefault();
     try{
@@ -170,16 +224,12 @@ const Project= () => {
           closeOnClick: true,
         });      
       } else {
-        toast.error(data.message || "Failed to send invitation.", {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-        });
+        setError(data.message || "Failed to send invitation.")
+        
       }
       
     } catch (err) {
-      setError("An error occurred while adding a budget.");
+      setError("An error occurred while adding a Member.");
     }
       
     hideAddMemberForm() 
@@ -239,8 +289,19 @@ const Project= () => {
     useEffect(() => {
         fetch_details()
     },[project_id])  ; 
-
-   
+    const showerror=()=>{
+      toast.error(error, {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,});
+    }
+   useEffect(() => {
+               if (error) {
+                 showerror();
+                 setError(null); 
+               }
+           }, [error]);
 
   return (
     <div className="w-full h-[100vh] flex p-3 bg-slate-200 gap-2">
@@ -644,6 +705,7 @@ const Project= () => {
       className={`fixed top-0 right-0 rounded-lg h-screen w-1/3 bg-white border-l border-gray-300 shadow-2xl p-10 z-50 transform transition-transform duration-700 ease-in-out ${
       selectedTask ? "translate-x-0" : "translate-x-full"
     }`}
+
   > { selectedTask && <div className="flex flex-col justify-around h-full">
           <button
           onClick={handleCloseReviewForm}
@@ -702,7 +764,7 @@ const Project= () => {
               <span className="text-gray-500"> {selectedTask.message}</span>
             </div>
             {selectedTask?.file_path && 
-            <div className="flex items-center gap-8 w-full;">
+            <div className="flex items-center gap-8 w-full">
               <span className="flex items-center gap-2 text-sm font-medium"><CgAttachment /> Attachement : </span>
               <a
                   href={`http://localhost/project_management/src/API/download.php?file=${encodeURIComponent(selectedTask.file_path)}`}
@@ -715,25 +777,43 @@ const Project= () => {
             </div>}
             
           </div>
+          <div >
+            
+          <label className=" text-gray-500 text-base " >
+                   <strong >Response :</strong> 
+          </label>
+          
+         
+                <div className="flex flex-col items-center mt-2 mb-2">
+                <textarea
+                   
+                  onChange={(e)=>setMessage(e.target.value)}
+                  placeholder="Write your Comments here..."
+                  className=" w-11/12 h-12 p-2 bg-gray-100 text-gray-600  rounded-md border border-gray-300 focus:outline-none focus:border-slate-500 focus:ring focus:ring-slate-500 transition hover:shadow-md "
+                ></textarea>
+                </div>  
           <div className="flex items-center justify-around">
               <button
                 type="button"
-                onClick={handleCloseReviewForm}
+                onClick={() =>handleApprove("Refused")}
                 className="btn btn-danger"
               >
               <span className="flex items-center gap-2"> <MdCancel/> Refuse</span>
               </button>
               <button
                 type="button"
-                onClick={handleCloseReviewForm}
+                onClick={() =>handleApprove("Completed")}
                 className="btn btn-success "
               > <span className="flex items-center gap-2"><FaCheckCircle /> Approve</span>
                
               </button>
             </div>
+            </div>
     </div>
+   
     }
   </div>
+  
 )}
 
 

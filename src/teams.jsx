@@ -5,13 +5,13 @@ import TeamCard from "./Team_card";
 import toast from 'react-hot-toast';
 import Sidebar from "./sidebar";
 import {UserGroupIcon} from "@heroicons/react/outline"
-
+import { Link } from "react-router-dom";
 <link
   href="https://fonts.googleapis.com/icon?family=Material+Icons"
   rel="stylesheet"
 />
 
-const Task= () => {
+const Teams= () => {
   const [teams, setTeams] = useState([]);
   //const { userDetails } = useContext(UserContext);
   
@@ -37,6 +37,7 @@ const Task= () => {
       
             if (data.success) {
                setTeams(data.data)
+
                console.log(data.data)
             }
              else {
@@ -76,8 +77,10 @@ const Task= () => {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 p-4">
             {teams.map((team) => (
-              <TeamCard key={team.team_id} name={team.team_name} initial={team.team_name[0] } project={team.project_title}
-               nb_user={team.nb_user}/>
+              <Link className="no-underline"
+              to={`/team/${team.team_id}`}
+              state={{ team }} ><TeamCard key={team.team_id} name={team.team_name} initial={team.team_name[0] } project={team.project_title}
+               nb_user={team.nb_user}/></Link>
             ))}
           </div>
     
@@ -124,4 +127,4 @@ const Task= () => {
   );
 };
 
-export default Task;
+export default Teams;

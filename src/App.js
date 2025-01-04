@@ -7,7 +7,8 @@ import  { Toaster } from 'react-hot-toast';
 import Signup from './signup.jsx';
 import Project from './project.jsx';
 import Schedule from './Schedule.jsx';
-import Team from './teams';
+import Teams from './teams.jsx';
+import Team from './team.jsx'
 const router = createBrowserRouter([
   {
     path:"/",
@@ -34,8 +35,12 @@ const router = createBrowserRouter([
     element:<Project />
   },
   {
+    path:"/team/:team_id",
+    element:<Team />
+  },
+  {
     path:"/teams",
-    element:<Team/>
+    element:<Teams/>
   },
 ])
 function App() {

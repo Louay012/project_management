@@ -118,6 +118,10 @@ const Task= () => {
           <h1 className="text-3xl font-semibold mb-6 flex items-center gap-2"> <FaTasks></FaTasks> Task Management</h1>
 
           {/* Task Column Titles */}
+          
+
+          {/* Task List */}
+          <div className="space-y-5 p-8" >
           <div
             className="flex bg-slate-500 p-3 rounded-lg shadow-md mb-4"
             style={{ display: "grid", gridTemplateColumns: "2fr 2fr 2fr 1fr 2fr 2fr " }}
@@ -146,9 +150,6 @@ const Task= () => {
 
            
           </div>
-
-          {/* Task List */}
-          <div className="space-y-5 " >
             {tasks && tasks.map((task) => (
               <TaskRow  
                 key={task.id}

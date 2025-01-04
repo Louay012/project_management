@@ -120,7 +120,7 @@ const Project= () => {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [taskDeadline, setTaskDeadline] = useState('');
-  const [taskMember, settaskMember] = useState(null);
+  const [taskMember, settaskMember] = useState(1);
   const [taskPriority, setTaskPriority] = useState("Low");
   const [memberEmail, setMemberEmail] = useState("");
   const hideAddTaskForm=()=>{
@@ -714,7 +714,7 @@ const Project= () => {
           &times;
         </button>
           <div className="flex flex-col gap-3">
-          <h2 className="text-lg font-bold mb-4">Review Task: {selectedTask.task_title}</h2>
+          <h2 className="text-lg font-bold "> Review Task:</h2>
             <div className="flex items-center gap-2">
               <label className=" text-sm font-medium flex items-center gap-2"><MdOutlineSubtitles/> Title : </label>
               <span className="text-gray-500"> {selectedTask.task_title}</span>
@@ -777,21 +777,22 @@ const Project= () => {
             </div>}
             
           </div>
-          <div >
-            
+          <div className="flex flex-col gap-4 " >
+            <div className="flex flex-col justify-start gap-2">
           <label className=" text-gray-500 text-base " >
                    <strong >Response :</strong> 
           </label>
           
          
-                <div className="flex flex-col items-center mt-2 mb-2">
+                
                 <textarea
                    
                   onChange={(e)=>setMessage(e.target.value)}
                   placeholder="Write your Comments here..."
                   className=" w-11/12 h-12 p-2 bg-gray-100 text-gray-600  rounded-md border border-gray-300 focus:outline-none focus:border-slate-500 focus:ring focus:ring-slate-500 transition hover:shadow-md "
                 ></textarea>
-                </div>  
+                
+              </div>
           <div className="flex items-center justify-around">
               <button
                 type="button"

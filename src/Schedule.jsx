@@ -68,7 +68,7 @@ const Schedule= () => {
     }
     useEffect(() => {
         fetch_details()
-    },[userDetails])  ; 
+    },[tasks, userDetails])  ; 
     const showerror=()=>{
       toast.error(error, {
         position: 'top-center',

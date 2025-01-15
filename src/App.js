@@ -9,6 +9,10 @@ import Project from './project.jsx';
 import Schedule from './Schedule.jsx';
 import Teams from './teams.jsx';
 import Team from './team.jsx'
+
+import { UserProvider } from './UserContext'; 
+import ProtectedRoute from './ProtectedRoute';
+
 const router = createBrowserRouter([
   {
     path:"/",
@@ -24,32 +28,32 @@ const router = createBrowserRouter([
   },
   {
     path:"/tasks",
-    element:<Task/>
+    element:<ProtectedRoute><Task/></ProtectedRoute>
   },
   {
     path:"/schedule",
-    element:<Schedule/>
+    element:<ProtectedRoute><Schedule/></ProtectedRoute>
   },
   {
     path:"/project/:project_id",
-    element:<Project />
+    element:<ProtectedRoute><Project /></ProtectedRoute>
   },
   {
     path:"/team/:team_id",
-    element:<Team />
+    element:<ProtectedRoute><Team /></ProtectedRoute>
   },
   {
     path:"/teams",
-    element:<Teams/>
+    element:<ProtectedRoute><Teams/></ProtectedRoute>
   },
 ])
 function App() {
-  return <>
-    
+  return (
+    <UserProvider> 
       <Toaster/>
       <RouterProvider router={router} ></RouterProvider>
-    
-      </>;
+      </UserProvider> 
+  );
 }
 
 export default App;

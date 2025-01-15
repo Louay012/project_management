@@ -6,14 +6,15 @@ import { TbTargetArrow } from "react-icons/tb";
 import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
+import { UserContext } from './UserContext';
 // handle_submit 
 const TaskRow = ({ task, isSelected, onSelect, setSelectedTask,setIsMenuVisible,setMenuPosition }) => {
   const navigate = useNavigate();
+  const { userDetails } = useContext(UserContext);
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("");
-  
-   //const { userDetails } = useContext(UserContext);
+
   const[canSelect,setcanSelect]=useState(false);
   
   const messageRef = useRef(null);
@@ -50,9 +51,9 @@ const TaskRow = ({ task, isSelected, onSelect, setSelectedTask,setIsMenuVisible,
   const handleSubmit=async (event) => {
     event.preventDefault();
     
-
+    
       const formData = new FormData();
-      formData.append('user_id', 1); 
+      formData.append('user_id', userDetails.user_id); 
       formData.append('task_id', task.id); 
       formData.append('message', message? message:'');
       formData.append('file', file);

@@ -1,39 +1,39 @@
 import React, { useState,useContext,useEffect } from "react";
-//import { UserContext } from './UserContext';
+import { UserContext } from './UserContext';
 import TaskRow from "./taskCard"; 
 import toast from 'react-hot-toast';
 import Sidebar from "./sidebar";
 import { FaTasks } from "react-icons/fa";
 import { MdOutlineNotStarted } from "react-icons/md";
 import Swal from 'sweetalert2';
-import { useNavigate } from "react-router-dom";
+
 <link
   href="https://fonts.googleapis.com/icon?family=Material+Icons"
   rel="stylesheet"
 />
 
 const Task= () => {
-  const navigate = useNavigate();
+  
   const [tasks, setTasks] = useState([]);
-  //const { userDetails } = useContext(UserContext);
+  const { userDetails } = useContext(UserContext);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null); 
-    const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
-  const[username,setUsername]=useState('');
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  
 
   const [error, setError] = useState(null);
 
   const fetch_Tasks=async () => {
     try{
-      
-        
+      console.log(userDetails)
+        if(userDetails){
       const response= await fetch('http://localhost/project_management/src/API/tasks.php' ,{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ 
-                user_id:1
+                user_id: userDetails.user_id
               }),
         })
 
@@ -48,7 +48,7 @@ const Task= () => {
             setError(data.message || "Failed to fetch Tasks.");
 
             }
-          
+        }
         } catch (err) {
             setError("An error occurred while fetching Tasks." );
             
@@ -71,7 +71,7 @@ const Task= () => {
     
   useEffect(() => {
       fetch_Tasks()
-    },[])  ; 
+    },[userDetails])  ; 
   
   const [selectedTaskId, setSelectedTaskId] = useState(null); // Track selected task
   console.log(selectedTaskId)

@@ -1,5 +1,5 @@
 import React, { useState,useContext,useEffect } from "react";
-//import { UserContext } from './UserContext';
+import { UserContext } from './UserContext';
 import TaskRow from "./taskCard"; 
 import TeamCard from "./Team_card";
 import toast from 'react-hot-toast';
@@ -13,10 +13,9 @@ import { Link } from "react-router-dom";
 
 const Teams= () => {
   const [teams, setTeams] = useState([]);
-  //const { userDetails } = useContext(UserContext);
+  const { userDetails } = useContext(UserContext);
   
-  //const[username,setUsername]=useState('');
-
+  
   const [error, setError] = useState(null);
 
   const fetch_Teams=async () => {
@@ -29,7 +28,7 @@ const Teams= () => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ 
-                user_id:1
+                user_id:userDetails.user_id
               }),
         })
 
@@ -64,7 +63,7 @@ const Teams= () => {
     
   useEffect(() => {
       fetch_Teams()
-    },[])  ; 
+    },[userDetails])  ; 
   
   
   

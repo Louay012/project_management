@@ -1,16 +1,66 @@
-import React, { useState } from 'react';
+import React, {useContext,useState,useEffect } from 'react';
 import img from './Images/Good team-bro.png'
-import { Link } from 'react-router-dom';
+import { Link ,useNavigate} from 'react-router-dom';
 import { IoIosLogIn } from "react-icons/io";
+import { UserContext } from './UserContext';
+import toast from 'react-hot-toast';
+
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    console.log({ username, password });
-  };
+  const [error, setError] = useState(null);
+  const { userDetails, setUserDetails } = useContext(UserContext);
+  const navigate = useNavigate(); 
+  useEffect(() => {
+      if (userDetails) {
+        navigate("/Schedule");
+      }
+    }, [userDetails,navigate]);
+  const handleSubmit= async (e) =>{
+  e.preventDefault();
+  try{
+      const response = await fetch('http://localhost/project_management/src/API/login.php',{
+          method:'POST',
+          headers:{
+                  'Content-Type': 'application/json',
+              },
+          body:JSON.stringify({
+              email: email,
+              password: password,
+          })
+      })
+ 
+      const data = await response.json();
+      if(data.success){
+          console.log(data.data);
+          const userData=data.data;
+          setUserDetails(userData);
+          localStorage.setItem('userDetails', JSON.stringify(userData));
+          
+          navigate('/Schedule');
+      }
+      else{
+          setError(data.message);
+      }
+  }
+  catch(error){
+      setError('Error during login:', error);
+  }
+}
+const showerror=()=>{
+  toast.error(error, {
+    position: 'top-center',
+    autoClose: 1000, 
+    hideProgressBar: true,
+    closeOnClick: true,});
+} 
+useEffect(() => {
+  if (error) {
+    showerror();
+    setError(null); 
+  }
+}, [error]);
+  
 
   return (
     <div className="h-screen flex items-center justify-center bg-gradient-to-r from-gray-50  to-slate-200">
@@ -24,13 +74,13 @@ const Login = () => {
                 </div>
                 <form onSubmit={handleSubmit} className="flex flex-col justify-around gap-4 ">
                 <div className='flex flex-col gap-2'>
-                    <label htmlFor="username" className="block text-gray-700">Username :</label>
+                    <label htmlFor="email" className="block text-gray-700">Email :</label>
                     <input 
-                    type="text" 
-                    id="username" 
-                    name="username" 
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400" 
                     required 
                     />

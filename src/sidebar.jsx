@@ -1,4 +1,4 @@
-import React, { useState ,useEffect,useRef} from "react";
+import React, { useState ,useEffect,useRef,useContext} from "react";
 import { Link } from "react-router-dom";
 import toast from 'react-hot-toast';
 import { 
@@ -9,10 +9,24 @@ import {
   FolderIcon ,
   UserCircleIcon
 } from "@heroicons/react/outline";
+import { TbLogout2 } from "react-icons/tb";
 import { IoIosNotifications } from "react-icons/io";
 import { FaTasks } from "react-icons/fa";
+import { UserContext } from './UserContext';
+import { useNavigate } from 'react-router-dom';
+
 const Sidebar = () => {
-  
+  const {userDetails, setUserDetails } = useContext(UserContext);
+  const[username, setUsername]=useState('')
+  const[email, setEmail]=useState('')
+  useEffect(() => {
+    if(userDetails){
+    setUsername(userDetails.username)
+    setEmail(userDetails.email)
+    }
+  },[userDetails])  ;
+  const navigate = useNavigate();
+
   const [projects,setProjects]=useState([]);
   const [error, setError] = useState(null);
  
@@ -42,14 +56,15 @@ const Sidebar = () => {
    
   
   const fetch_Projects=async () => {
-    try{  
+    try{ 
+      if(userDetails){ 
         const response= await fetch('http://localhost/project_management/src/API/get_projects.php' ,{
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
               },
               body: JSON.stringify({ 
-                  user_id:1
+                  user_id:userDetails.user_id
                 }),
           })
   
@@ -64,7 +79,7 @@ const Sidebar = () => {
               setError(data.message || "Failed to fetch Projects.");
   
               }
-            
+            }  
           } catch (err) {
               setError("An error occurred while fetching Projects." );
               
@@ -73,10 +88,11 @@ const Sidebar = () => {
       }
       useEffect(() => {
         fetch_Projects()
-      },[])  ;
+      },[userDetails])  ;
 
       const fetchNotifications = async () => {
         try {
+          if(userDetails){
           const response = await fetch(
             "http://localhost/project_management/src/API/get_notifications.php",
             {
@@ -85,7 +101,7 @@ const Sidebar = () => {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                user_id: 2,
+                user_id: userDetails.user_id,
               }),
             }
           );
@@ -98,10 +114,21 @@ const Sidebar = () => {
           } else {
             setError(data.message || "Failed to fetch Notifications.");
           }
+        }
         } catch (err) {
           setError("An error occurred while fetching Notifications.");
         }
       };
+
+      const handleLogout = () => {
+    
+        setUserDetails(null);
+    
+        localStorage.removeItem('userDetails'); 
+    
+        navigate('/'); 
+      };
+
       const showerror=()=>{
         toast.error(error, {
           position: 'top-center',
@@ -184,13 +211,19 @@ const Sidebar = () => {
         </div>
       </div>
 
+      <button className=" flex items-center justify-center gap-2 w-full text-black hover:text-purple-400" 
+        onClick={handleLogout}>
+          <i><TbLogout2 className='text-inherit'/></i> 
+          <span className="hidden md:block text-inherit">Logout</span>
+          </button>
+
       {/* Footer */}
-      <div className="px-6 py-4 border-t">
+     <div className="px-6 py-4 border-t">
         <div className="flex items-center space-x-3">
           <UserCircleIcon className=""></UserCircleIcon>
           <div>
-            <p className="text-sm font-medium text-gray-800">user</p>
-            <p className="text-xs text-gray-500">user@gmail.com</p>
+            <p className="text-sm font-medium text-gray-800">{username}</p>
+            <p className="text-xs text-gray-500">{email}</p>
           </div>
         </div>
       </div>

@@ -27,7 +27,7 @@ import { FaRegUser } from "react-icons/fa";
 import { FaUsersGear } from "react-icons/fa6";
 import { MdAlternateEmail } from "react-icons/md";
 import { AiOutlineFileSearch } from "react-icons/ai";
-
+import { UserContext } from './UserContext';
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 <link
   href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -35,6 +35,7 @@ ChartJS.register(ArcElement, Tooltip, Legend, Title);
 />
 
 const Project= () => {
+  const { userDetails } = useContext(UserContext);
   const formRef = useRef(null);
   const panelRef = useRef(null);
     const [TaskStats, setTaskStats] = useState(null);
@@ -238,15 +239,15 @@ const Project= () => {
     //setSubTasks([])
     try{
       
-        
+      if(userDetails){
       const response= await fetch('http://localhost/project_management/src/API/get_project_details.php' ,{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ 
-                project_id:project_id,
-                user_id:1,
+                project_id: project_id,
+                user_id: userDetails.user_id,
               }),
         })
         console.log(project_id)
@@ -278,7 +279,7 @@ const Project= () => {
             setError(data.message || "Failed to fetch Project Details.");
 
             }
-          
+      }
         } catch (err) {
             setError("An error occurred while fetching Project Details." );
             
@@ -288,7 +289,8 @@ const Project= () => {
     
     useEffect(() => {
         fetch_details()
-    },[project_id])  ; 
+    },[project_id,userDetails])  ; 
+    
     const showerror=()=>{
       toast.error(error, {
         position: 'top-center',

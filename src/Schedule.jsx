@@ -12,6 +12,9 @@ import moment from 'moment';
 import { TbTargetArrow } from "react-icons/tb";
 import { CgSandClock } from "react-icons/cg";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import toast from 'react-hot-toast';
+
+import { UserContext } from './UserContext';
 const localizer = momentLocalizer(moment);
 <link
   href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -19,6 +22,7 @@ const localizer = momentLocalizer(moment);
 />
 
 const Schedule= () => {
+  const { userDetails } = useContext(UserContext);
 
   const [error, setError] = useState(null);
   const [tasks, setTasks] = useState([]);
@@ -28,14 +32,14 @@ const Schedule= () => {
   const fetch_details=async () => {
     try{
       
-        
+        if(userDetails){
       const response= await fetch('http://localhost/project_management/src/API/tasks.php' ,{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ 
-                user_id:1,
+                user_id: userDetails.user_id,
 
               }),
         })
@@ -55,7 +59,7 @@ const Schedule= () => {
             setError(data.message || "Failed to fetch Tasks.");
 
             }
-          
+          } 
         } catch (err) {
             setError("An error occurred while fetching Tasks." );
             
@@ -64,7 +68,20 @@ const Schedule= () => {
     }
     useEffect(() => {
         fetch_details()
-    },[tasks])  ; 
+    },[userDetails])  ; 
+    const showerror=()=>{
+      toast.error(error, {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,});
+    }
+   useEffect(() => {
+               if (error) {
+                 showerror();
+                 setError(null); 
+               }
+           }, [error]);
 
     const CustomTimeHeader = () => {
       return null; // Return nothing to effectively hide the time column

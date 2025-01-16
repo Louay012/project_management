@@ -14,6 +14,7 @@ import { IoIosNotifications } from "react-icons/io";
 import { FaTasks } from "react-icons/fa";
 import { UserContext } from './UserContext';
 import { useNavigate } from 'react-router-dom';
+import { GrSchedulePlay } from "react-icons/gr";
 
 const Sidebar = () => {
   const {userDetails, setUserDetails } = useContext(UserContext);
@@ -143,7 +144,7 @@ const Sidebar = () => {
             }
         }, [error]);
   return (
-    <div className="h-[100vh] w-56 bg-slate-200  flex flex-col rounded fixed left-0 top-0 bottom-0 ">
+    <div className="h-[100vh] w-48   flex flex-col rounded fixed left-0 top-0 bottom-0 ">
       {/* Logo */}
       <div className="px-6 py-4 border-b">
         <h1 className="text-lg font-bold text-gray-800">TaskFlow</h1>
@@ -151,14 +152,14 @@ const Sidebar = () => {
 
       {/* Navigation */}
       <div className="flex-1 overflow-y-auto">
-        <ul className="mt-4 space-y-2 px-4">
+        <ul className="mt-4 space-y-2  flex flex-col">
           <li>
             <Link
               to="/schedule"
               
               className="flex items-center gap-3 p-2 text-gray-700 cursor-pointer hover:bg-slate-300 rounded-md no-underline"
             >
-              <HomeIcon className="w-6 h-6" />
+              <GrSchedulePlay className="w-6 h-6" />
               <span>Schedule</span>
             </Link>
           </li>
@@ -211,14 +212,14 @@ const Sidebar = () => {
         </div>
       </div>
 
-      <button className=" flex items-center justify-center gap-2 w-full text-black hover:text-purple-400" 
+      <button className=" flex items-center justify-center gap-2 w-full text-black mb-6 hover:text-purple-400" 
         onClick={handleLogout}>
           <i><TbLogout2 className='text-inherit'/></i> 
           <span className="hidden md:block text-inherit">Logout</span>
           </button>
 
       {/* Footer */}
-     <div className="px-6 py-4 border-t">
+     {/*<div className="px-6 py-4 border-t">
         <div className="flex items-center space-x-3">
           <UserCircleIcon className=""></UserCircleIcon>
           <div>
@@ -226,7 +227,7 @@ const Sidebar = () => {
             <p className="text-xs text-gray-500">{email}</p>
           </div>
         </div>
-      </div>
+      </div>*/}
       
       <div ref={panelRef}
   className={`fixed top-0 left-0 rounded-lg h-screen w-60 bg-white border-l border-gray-300 shadow-2xl px-2 py-5 z-50 transform transition-transform duration-700 ease-in-out ${

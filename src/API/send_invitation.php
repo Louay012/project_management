@@ -25,7 +25,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     
     $stmt->execute();
 
-    $stmt1=$pdo->prepare("insert into invvitations (title,user_id,description,status,priority,deadline,project_id,created_at) values(:title,:user_id,:description,'Pending',:priority,:deadline,:project_id,now()) ");
+    $stmt1=$pdo->prepare("insert into invitations (title,user_id,description,status,priority,deadline,project_id,created_at) values(:title,:user_id,:description,'Pending',:priority,:deadline,:project_id,now()) ");
 
     $stmt1->bindParam(':title',$title);
     $stmt1->bindParam(':description',$description);
@@ -36,9 +36,9 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     $stmt1->execute();
     if($stmt1){
        
-        echo json_encode(['success' => true, 'message' => 'Task added successfully! ']);
+        echo json_encode(['success' => true, 'message' => 'invitation sent successfully! ']);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Failed to add the task.']);
+        echo json_encode(['success' => false, 'message' => 'Failed to sent  invitation.']);
     }
     }
     catch (Exception $e) {

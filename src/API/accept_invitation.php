@@ -12,33 +12,28 @@ session_start();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
     $input = json_decode(file_get_contents("php://input"), true);
-    $email = $input['email']  ;
-    
-   
+    $user_id = $input['user_id']  ;
+    $role = $input['role']  ;
+    $team_id = $input['team_id']  ;
+   $invitation_id=$input['invitation_id'];
 
    try {
     
     
-    $stmt=$pdo->prepare("select * from users u where u.email = :email ");
-
-    $stmt->bindParam(':email',$email);
     
-    $stmt->execute();
+    $stmt1=$pdo->prepare("insert into team_users(team_id,user_id,role) values(:team_id,:user_id,:role) ");
 
-    $stmt1=$pdo->prepare("insert into invitations (title,user_id,description,priority,deadline,project_id,created_at) values(:title,:user_id,:description,:priority,:deadline,:project_id,now()) ");
-
-    $stmt1->bindParam(':title',$title);
-    $stmt1->bindParam(':description',$description);
-    $stmt1->bindParam(':priority',$priority);
-    $stmt1->bindParam(':user_id',$user);
-    $stmt1->bindParam(':deadline',$deadline);
-    $stmt1->bindParam(':project_id',$project_id);
+    $stmt1->bindParam(':role',$role);
+    $stmt1->bindParam(':user_id',$user_id);
+    $stmt1->bindParam(':team_id',$team_id);
     $stmt1->execute();
     if($stmt1){
-       
-        echo json_encode(['success' => true, 'message' => 'invitation sent successfully! ']);
+        $stmt2=$pdo->prepare("delete  from invitations  where invitations.id =:invitation_id ");
+        $stmt2->bindParam(':invitation_id',$invitation_id);
+        $stmt2->execute();
+        echo json_encode(['success' => true, 'message' => 'invite accepted successfully! ']);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Failed to sent  invitation.']);
+        echo json_encode(['success' => false, 'message' => 'Failed to accepte the invite.']);
     }
     }
     catch (Exception $e) {

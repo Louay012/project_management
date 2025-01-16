@@ -48,7 +48,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         Date(i.sent_at) sent,
         Date(i.expires_at) expires,
         u.email email,
-        t.name team
+        t.name team,
+        t.team_id team_id
     FROM
         invitations i
     JOIN users u ON i.sender_id = u.user_id

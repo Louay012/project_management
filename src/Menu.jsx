@@ -35,6 +35,7 @@ const Menu= () => {
    const [error, setError] = useState(null);
    const [loading, setLoading] = useState(true);
    const [invitations, setInvitations] = useState([]);
+   const [selectedInvitation, setselectedInvitation] = useState([]);
     const [TaskStats, setTaskStats] = useState(null);
     const [TaskCount, setTaskCount] = useState(null);
   const fetch_details=async () => {
@@ -115,7 +116,47 @@ const Menu= () => {
                  setError(null); 
                }
            }, [error]);
+    const handleAccept=async (i) => {
 
+
+            try{
+              
+              const response=await fetch('http://localhost/project_management/src/API/accept_invitation.php',{
+                method:'POST',
+                headers:{
+                  'Content-Type': 'application/json',
+                },
+                body:JSON.stringify({
+                    user_id: userDetails.user_id,
+                    role:i.role,
+                    team_id:i.team_id,
+                    invitation_id:i.id
+                  
+                })
+              })
+              
+              const data=await response.json();
+          
+              
+              if (data.success) {
+                fetch_details()
+                toast.success(data.message, {
+                  position: 'top-center',
+                  autoClose: 3000,
+                  hideProgressBar: true,
+                  closeOnClick: true,
+                });      
+              } else {
+                setError(data.message || "Failed to send invitation.")
+                
+              }
+              
+            } catch (err) {
+              setError("An error occurred while adding a Member.");
+            }
+              
+           
+          }
   return (
     <div className="w-full h-[100vh] flex p-3 bg-slate-200 gap-2">
         <Sidebar></Sidebar>
@@ -149,7 +190,7 @@ const Menu= () => {
                 </div>
             </div>
         <div className="flex flex-col p-4 gap-4">
-            <h3 className="flex items-center gap-2 text-slate-700 text-center font-mono"> <FaAddressCard/> Invitation :</h3>
+            <span className="flex items-center gap-2 px-4 text-slate-700 text-2xl font-mono"> <FaAddressCard/> Invitation :</span>
             <table className="min-w-full bg-white table-auto rounded-lg overflow-hidden shadow-sm table-bordered">
                     <thead className="text-sm font-semibold text-gray-100 bg-gradient-to-r bg-slate-500 text-left">
                     <tr>
@@ -179,11 +220,14 @@ const Menu= () => {
                             <td className="px-6 py-4 text-sm text-gray-600">{i.sent}</td>
                             <td className="px-6 py-4 text-sm text-gray-600">{i.expires}</td>
                             <td className="px-6 py-4 text-sm text-gray-800 w-6  ">
-                            <button  type="submit" value="" ><MdCheckCircle className="h-6 w-6 rounded-3xl text-emerald-500 hover:outline outline-emerald-200"/></button>
+                            <button  type="submit"  onClick={() => {
+                                    
+                                    handleAccept(i); 
+                                }} ><MdCheckCircle className="h-6 w-6 rounded-3xl text-emerald-500 hover:outline outline-emerald-200"/></button>
                                 </td>
-                                <td className="px-6 py-4 text-sm text-gray-800 w-6  ">
-                                <button  type="submit" value="" ><MdCancel className="h-6 w-6 rounded-3xl text-red-500 hover:outline outline-red-200 border-0 "/></button>
-                                </td>
+                            <td className="px-6 py-4 text-sm text-gray-800 w-6  ">
+                                <button  type="submit" ><MdCancel className="h-6 w-6 rounded-3xl text-red-500 hover:outline outline-red-200 border-0 "/></button>
+                            </td>
                         </tr>
                         ))}
                     </tbody>

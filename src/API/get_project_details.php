@@ -76,6 +76,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                     WHERE t.project_id = :project_id  and tu.team_id=t.team_id and tu.user_id=u.user_id ");
 
     $stmt3->bindParam(':project_id',$project_id);
+  
     $stmt3->execute();
     $members = $stmt3->fetchAll(PDO::FETCH_ASSOC);
 

@@ -46,7 +46,6 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         i.description description,
         i.role role,
         Date(i.sent_at) sent,
-        Date(i.expires_at) expires,
         u.email email,
         t.name team,
         t.team_id team_id

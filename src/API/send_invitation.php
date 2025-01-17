@@ -23,29 +23,38 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     
     
     $stmt=$pdo->prepare("select * from users u where u.email = :email ");
-
     $stmt->bindParam(':email',$email);
-    
     $stmt->execute();
     $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
-if($user){
-    $stmt1=$pdo->prepare("insert into invitations (sender_id,description,recipient_email,role,team_id,sent_at) values(:sender_id,:description,:recipient_email,:role,:team_id,now()) ");
 
-    $stmt1->bindParam(':sender_id',$user_id);
-    $stmt1->bindParam(':description',$description);
-    $stmt1->bindParam(':recipient_email',$email);
-    $stmt1->bindParam(':role',$role);
+if($user){
+
+    $stmt1=$pdo->prepare("select * from team_users where user_id = :user_id and team_id=:team_id ");
+    $stmt1->bindParam(':user_id',$user[0]['user_id']);
     $stmt1->bindParam(':team_id',$team_id);
-  
     $stmt1->execute();
-    if($stmt1){
+    $member = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+    if($member){
+        echo json_encode(['success' => false, 'message' => 'Member already exists in the team']);
+    }
+    else{
+    $stmt2=$pdo->prepare("insert into invitations (sender_id,description,recipient_email,role,team_id,sent_at) values(:sender_id,:description,:recipient_email,:role,:team_id,now()) ");
+    $stmt2->bindParam(':sender_id',$user_id);
+    $stmt2->bindParam(':description',$description);
+    $stmt2->bindParam(':recipient_email',$email);
+    $stmt2->bindParam(':role',$role);
+    $stmt2->bindParam(':team_id',$team_id);
+    $stmt2->execute();
+
+    if($stmt2){
        
         echo json_encode(['success' => true, 'message' => 'Invitation sent successfully! ']);
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to send the invitation.']);
     }
+}
     }else{
-
+        echo json_encode(['success' => false, 'message' => 'user Email does not exist ']);
     }
 }
     catch (Exception $e) {

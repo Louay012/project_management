@@ -9,7 +9,7 @@ import Project from './project.jsx';
 import Schedule from './Schedule.jsx';
 import Teams from './teams.jsx';
 import Team from './team.jsx'
-
+import Menu from './Menu.jsx';
 import { UserProvider } from './UserContext'; 
 import ProtectedRoute from './ProtectedRoute';
 
@@ -45,6 +45,10 @@ const router = createBrowserRouter([
   {
     path:"/teams",
     element:<ProtectedRoute><Teams/></ProtectedRoute>
+  },
+  {
+    path:"/menu",
+    element:<ProtectedRoute><Menu/></ProtectedRoute>
   },
 ])
 function App() {

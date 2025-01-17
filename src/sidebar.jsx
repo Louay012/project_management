@@ -15,7 +15,7 @@ import { FaTasks } from "react-icons/fa";
 import { UserContext } from './UserContext';
 import { useNavigate } from 'react-router-dom';
 import { GrSchedulePlay } from "react-icons/gr";
-
+import { TbLayoutDashboard } from "react-icons/tb";
 const Sidebar = () => {
   const {userDetails, setUserDetails } = useContext(UserContext);
   const[username, setUsername]=useState('')
@@ -153,6 +153,16 @@ const Sidebar = () => {
       {/* Navigation */}
       <div className="flex-1 overflow-y-auto">
         <ul className="mt-4 space-y-2  flex flex-col">
+        <li>
+            <Link
+              to="/menu"
+              
+              className="flex items-center gap-3 p-2 text-gray-700 cursor-pointer hover:bg-slate-300 rounded-md no-underline"
+            >
+              <TbLayoutDashboard className="w-6 h-6" />
+              <span>Menu</span>
+            </Link>
+          </li>
           <li>
             <Link
               to="/schedule"

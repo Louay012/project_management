@@ -124,7 +124,7 @@ const Task= () => {
           <div className="space-y-5 p-8" >
           <div
             className="flex bg-slate-500 p-3 rounded-lg shadow-md mb-4"
-            style={{ display: "grid", gridTemplateColumns: "2fr 2fr 2fr 1fr 2fr 2fr " }}
+            style={{ display: "grid", gridTemplateColumns: "2fr 2fr 2fr 2fr 2fr 2fr " }}
           >
             <div className="flex flex-col justify-center items-start"  >
               <span className="font-bold text-gray-100">Project </span>

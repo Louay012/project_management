@@ -277,15 +277,18 @@ const Project= () => {
               setSubTasks(data.Sub_tasks)
               setProjectManagers(data.managers)
               console.log(SubTasks)
-              const dataStats=[data.stats[0].completed,data.stats[0].in_progress,data.stats[0].pending];
+              const dataStats=[data.stats[0].completed,data.stats[0].in_progress,data.stats[0].pending,
+              data.stats[0].awaiting_approval,data.stats[0].refused];
               setTaskStats({
-                labels: ['Completed', 'In Progress', 'Pending'],
+                labels: ['Completed', 'In Progress', 'Pending','Awaiting Approval','Refused'],
                 datasets: [
                   {
                     label: 'number of tasks ',
                     data: dataStats,
-                    backgroundColor: ['rgba(76, 175, 80, 0.2)', 'rgba(155, 175, 76, 0.1)', 'rgba(62, 90, 167, 0.2)'], // Green, Yellow, Red
-                    borderColor: ['rgba(76, 175, 80, 0.6)', 'rgba(155, 175, 76, 0.6)', 'rgba(62, 90, 167, 0.6)'],
+                    backgroundColor: ['rgba(76, 175, 80, 0.2)', 'rgba(155, 175, 76, 0.1)',
+                       'rgba(62, 90, 167, 0.2)','rgba(219, 71, 244, 0.2)','rgba(244, 71, 122, 0.2)'], // Green, Yellow, Red
+                    borderColor: ['rgba(76, 175, 80, 0.6)', 'rgba(155, 175, 76, 0.6)',
+                       'rgba(62, 90, 167, 0.6)','rgba(219, 71, 244, 0.6)','rgba(244, 71, 122, 0.6)'],
                     borderWidth: 1,
                   },
                 ],

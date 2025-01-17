@@ -7,6 +7,9 @@ import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import { UserContext } from './UserContext';
+import { TbFlagMinus } from "react-icons/tb";
+import { TbFlagExclamation } from "react-icons/tb";
+import { TbFlagBolt } from "react-icons/tb";
 // handle_submit 
 const TaskRow = ({ task, isSelected, onSelect, setSelectedTask,setIsMenuVisible,setMenuPosition }) => {
   const navigate = useNavigate();
@@ -153,7 +156,7 @@ cancelButtonText: 'Cancel',
           ${task.status==="Completed" ? "bg-green-100 hover:bg-green-200" :""}
           ${canSelect ? "cursor-pointer" : ""}`}
         onClick={() => onSelect(task.id)} // When clicked, toggle selection
-        style={{ display: "grid", gridTemplateColumns: "2fr 2fr 2fr 1fr 2fr 2fr"}}
+        style={{ display: "grid", gridTemplateColumns: "2fr 2fr 2fr 2fr 2fr 2fr"}}
       >
         <div className="flex flex-col justify-center items-start" >
           <span className="font-medium text-gray-700">{task.project_title}</span>
@@ -168,14 +171,20 @@ cancelButtonText: 'Cancel',
         </div>
 
         <div className="flex flex-col justify-center items-start">
-        <span className={`px-3 py-1  font-medium  ${
-                task.priority === "high"
-                        ? "text-red-500 "
-                        : task.priority === "medium"
-                        ? "text-yellow-500 "
-                        
-                        : "text-blue-500 "
-              }`}> {task.priority}</span>
+        <span className={`px-1 py-1 rounded-md inline-flex items-center justify-center gap-2 w-28  font-medium border-1 ${
+                            task.priority === "high"
+                                    ? "text-red-500 border-red-500"
+                                    : task.priority === "medium"
+                                    ? "text-yellow-500 border-yellow-500"
+                                    
+                                    : "text-blue-500 border-blue-500"
+                          }`}>
+        
+                        {task.priority === "high" && <TbFlagExclamation />}
+                        {task.priority === "medium" && <TbFlagMinus />}
+                        {task.priority === "low" && <TbFlagBolt />}
+                        {task.priority}
+                        </span>
         </div>
         
         

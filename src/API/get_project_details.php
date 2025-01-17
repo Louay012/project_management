@@ -51,16 +51,21 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     $stmt1->execute();
     $tasks = $stmt1->fetchAll(PDO::FETCH_ASSOC);
 
-    $stmt2=$pdo->prepare("SELECT
-    COUNT(CASE WHEN t.status = 'Completed' THEN 1 END) AS completed,
-    COUNT(CASE WHEN t.status = 'In-Progress' THEN 1 END) AS in_progress,
-    COUNT(CASE WHEN t.status = 'Pending' THEN 1 END) AS pending
-        FROM
-            tasks t
-        JOIN
-            projects p ON t.project_id = p.project_id
-        WHERE
-            p.project_id = :project_id;");
+    $stmt2 = $pdo->prepare("
+    SELECT
+        COUNT(CASE WHEN t.status = 'Completed' THEN 1 END) AS completed,
+        COUNT(CASE WHEN t.status = 'In-Progress' THEN 1 END) AS in_progress,
+        COUNT(CASE WHEN t.status = 'Pending' THEN 1 END) AS pending,
+        COUNT(CASE WHEN t.status = 'Awaiting Approval' THEN 1 END) AS awaiting_approval,
+        COUNT(CASE WHEN t.status = 'Refused' THEN 1 END) AS refused
+    FROM
+        tasks t
+    JOIN
+        projects p ON t.project_id = p.project_id
+    WHERE
+        p.project_id = :project_id
+");
+
 
     $stmt2->bindParam(':project_id',$project_id);
     $stmt2->execute();

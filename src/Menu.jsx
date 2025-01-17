@@ -60,7 +60,7 @@ const Menu= () => {
               const submissionCounts = data.task_submitted.map((t) => t.nb_submissions); 
               const dates=data.task_submitted.map((t)=>t.submission_date)
               setInvitations(data.invitations)
-              console.log(invitations)
+              console.log(invitations.length)
               setTaskCount({
                 labels: dates,
                 datasets: [
@@ -90,7 +90,7 @@ const Menu= () => {
               setLoading(false)
             }
              else {
-            setError( "Failed to fetch Project Details.");
+            setError( "Failed to fetch  data.");
 
             }
       }
@@ -119,7 +119,48 @@ const Menu= () => {
                  setError(null); 
                }
            }, [error]);
-    const handleAccept=async (i) => {
+    const handleReject=async (i) => {
+
+
+            try{
+              
+              const response=await fetch('http://localhost/project_management/src/API/reject_invitation.php',{
+                method:'POST',
+                headers:{
+                  'Content-Type': 'application/json',
+                },
+                body:JSON.stringify({
+                    user_id: userDetails.user_id,
+                    role:i.role,
+                    team_id:i.team_id,
+                    invitation_id:i.id
+                  
+                })
+              })
+              
+              const data=await response.json();
+          
+              
+              if (data.success) {
+                fetch_details()
+                toast.success(data.message, {
+                  position: 'top-center',
+                  autoClose: 3000,
+                  hideProgressBar: true,
+                  closeOnClick: true,
+                });      
+              } else {
+                setError(data.message || "Failed to reject invitation.")
+                
+              }
+              
+            } catch (err) {
+              setError(err||"An error occurred while refusing invitation.");
+            }
+              
+           
+          }
+          const handleAccept=async (i) => {
 
 
             try{
@@ -155,7 +196,7 @@ const Menu= () => {
               }
               
             } catch (err) {
-              setError("An error occurred while adding a Member.");
+              setError("An error occurred while sending invitation.");
             }
               
            
@@ -192,6 +233,7 @@ const Menu= () => {
                                             }} />
                 </div>
             </div>
+        {invitations.length>0 &&
         <div className="flex flex-col p-4 gap-4">
             <span className="flex items-center gap-2 px-4 text-slate-700 text-2xl font-mono"> <FaAddressCard/> Invitation :</span>
             <table className="min-w-full bg-white table-auto rounded-lg overflow-hidden shadow-sm table-bordered">
@@ -210,7 +252,7 @@ const Menu= () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {invitations.length>0 && invitations.map((i) => (
+                        { invitations.map((i) => (
                         <tr
                             key={i.id}
                             className="hover:bg-gray-100 transition-colors duration-200"
@@ -226,16 +268,21 @@ const Menu= () => {
                             <button  type="submit"  onClick={() => {
                                     
                                     handleAccept(i); 
-                                }} ><MdCheckCircle className="h-6 w-6 rounded-3xl text-emerald-500 hover:outline outline-emerald-200"/></button>
+                                }} ><MdCheckCircle className="h-6 w-6 rounded-3xl text-emerald-500 hover:outline outline-emerald-200"/>
+                                </button>
                                 </td>
                             <td className="px-6 py-4 text-sm text-gray-800 w-6  ">
-                                <button  type="submit" ><MdCancel className="h-6 w-6 rounded-3xl text-red-500 hover:outline outline-red-200 border-0 "/></button>
+                                <button  type="submit" onClick={() => {
+                                    
+                                    handleReject(i); 
+                                }} ><MdCancel className="h-6 w-6 rounded-3xl text-red-500 hover:outline outline-red-200 border-0 "/>
+                                </button>
                             </td>
                         </tr>
                         ))}
                     </tbody>
                     </table>
-                </div>
+                </div>}
              </div>
     )}
     </div>

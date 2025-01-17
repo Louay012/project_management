@@ -221,7 +221,7 @@ const Menu= () => {
                                             },
                     }} ></Bar>
                 </div>
-                <div className="bg-slate-100 p-3  rounded-lg shadow-md flex justify-center w-11/12 md:w-2/5 items-center h-80">
+                <div className="bg-slate-100 p-3  rounded-3xl shadow-md flex justify-center w-11/12 md:w-2/5 items-center h-80">
                                 <Pie  data={TaskStats} options={{
                                             responsive: true,
                                             maintainAspectRatio: false,

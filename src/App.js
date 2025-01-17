@@ -10,6 +10,7 @@ import Schedule from './Schedule.jsx';
 import Teams from './teams.jsx';
 import Team from './team.jsx'
 import Menu from './Menu.jsx';
+import Profile from './profile.jsx';
 import { UserProvider } from './UserContext'; 
 import ProtectedRoute from './ProtectedRoute';
 
@@ -49,6 +50,11 @@ const router = createBrowserRouter([
   {
     path:"/menu",
     element:<ProtectedRoute><Menu/></ProtectedRoute>
+  },
+  
+  {
+    path:"/profile",
+    element:<ProtectedRoute><Profile/></ProtectedRoute>
   },
 ])
 function App() {

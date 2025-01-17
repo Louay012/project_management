@@ -1,5 +1,5 @@
 import React, { useState,useContext,useEffect ,useRef, use} from "react";
-//import { UserContext } from './UserContext';
+
 import { Pie  } from 'react-chartjs-2';
 import { useParams } from "react-router-dom";
 import Sidebar from "./sidebar";
@@ -454,6 +454,7 @@ const Project= () => {
           </div>
         </div>
       )}
+
       {showAddMember && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
           <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
@@ -483,7 +484,7 @@ const Project= () => {
                   htmlFor="role"
                   className="block text-lg font-medium text-gray-700"
                 >
-                  Title
+                  Role
                 </label>
                 <input
                   id="role"
@@ -500,7 +501,7 @@ const Project= () => {
                   htmlFor="memberDescription"
                   className="block text-lg font-medium text-gray-700"
                 >
-                  Description
+                  Role_Description
                 </label>
                 <textarea
                   id="memberDescription"

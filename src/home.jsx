@@ -1,8 +1,16 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import logo from './Images/Task_flow__2___1_-removebg-preview.png'
 
-const Home = () => {
+import React, {useContext,useEffect } from 'react';
+import { Link, useNavigate } from "react-router-dom";
+import logo from './Images/Task_flow__2___1_-removebg-preview.png'
+import { UserContext } from './UserContext';
+const Home = () => { 
+  const navigate = useNavigate(); 
+  const { userDetails } = useContext(UserContext);
+  useEffect(() => {
+      if (userDetails) {
+        navigate("/Schedule");
+      }
+    }, [userDetails,navigate]);
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 relative overflow-hidden flex flex-col justify-between py-2">
       

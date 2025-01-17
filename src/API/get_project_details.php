@@ -13,7 +13,7 @@ session_start();
 if($_SERVER['REQUEST_METHOD']=='POST'){
     $input = json_decode(file_get_contents("php://input"), true);
     $project_id = $input['project_id']  ;
-    $user_id = $input['user_id']  ;
+
 
    try {
     $stmt=$pdo->prepare("SELECT
@@ -23,16 +23,19 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                         p.status,
                         p.deadline,
                         p.created_at,
-                        tu.role role,
+                        t.team_id as team_id,
                         DATEDIFF(p.deadline, CURDATE())  days_until_deadline
                     from
-                    teams t , team_users tu ,projects p
-                    WHERE t.project_id = p.project_id and p.project_id=:project_id and tu.user_id=:user_id ");
+                    projects p 
+                    join
+                        teams t
+                    on p.project_id = t.project_id
+                    WHERE  p.project_id=:project_id  ");
 
     $stmt->bindParam(':project_id',$project_id);
-    $stmt->bindParam(':user_id',$user_id);
     $stmt->execute();
     $details = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     $stmt1=$pdo->prepare("SELECT
                         t.task_id id,
                         t.title task_title,
@@ -45,9 +48,9 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                     WHERE t.project_id = p.project_id and p.project_id=:project_id");
 
     $stmt1->bindParam(':project_id',$project_id);
-  
     $stmt1->execute();
     $tasks = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+
     $stmt2=$pdo->prepare("SELECT
     COUNT(CASE WHEN t.status = 'Completed' THEN 1 END) AS completed,
     COUNT(CASE WHEN t.status = 'In-Progress' THEN 1 END) AS in_progress,
@@ -70,14 +73,14 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                         tu.role
                     from
                     users u ,teams t , team_users tu 
-                    WHERE t.project_id = :project_id  and tu.team_id=t.team_id and tu.user_id=u.user_id");
+                    WHERE t.project_id = :project_id  and tu.team_id=t.team_id and tu.user_id=u.user_id ");
 
     $stmt3->bindParam(':project_id',$project_id);
-  
     $stmt3->execute();
     $members = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+
     $stmt4=$pdo->prepare("SELECT
-    ts.submission_id AS submission_id,
+    max(ts.submission_id) AS submission_id,
     p.title AS project_title,
     t.task_id AS task_id,
     t.title AS task_title,
@@ -89,7 +92,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     t.review,
     ts.message,
     ts.file_path,
-    ts.submitted_at,
+    ts.submitted_at submitted_at,
     u.username,
     u.email
 FROM 
@@ -102,18 +105,33 @@ JOIN
     task_submissions ts ON t.task_id = ts.task_id
 WHERE
     t.project_id = :project_id 
-    AND t.user_id = :user_id;"
+    and t.status = 'Awaiting Approval'
+group by t.task_id;"
 );
-
-    $stmt4->bindParam(':user_id',$user_id);
     $stmt4->bindParam(':project_id',$project_id);
     $stmt4->execute();
     $Sub_tasks = $stmt4->fetchAll(PDO::FETCH_ASSOC);
-    echo json_encode(['success' => true, 'details'=>$details,'tasks'=>$tasks ,'stats'=>$stats ,'members'=>$members ,'Sub_tasks'=>$Sub_tasks]);
+
+    $stmt5=$pdo->prepare("SELECT
+                        user_id 
+                       
+                    from
+                    teams t , team_users tu 
+                    WHERE t.project_id = :project_id  and tu.team_id=t.team_id and tu.role='manager' ");
+
+    $stmt5->bindParam(':project_id',$project_id);
+  
+    $stmt5->execute();
+    $managers = $stmt5->fetchAll(PDO::FETCH_ASSOC);
+    
+    echo json_encode(['success' => true, 'details'=>$details,'tasks'=>$tasks ,'stats'=>$stats ,'members'=>$members ,'Sub_tasks'=>$Sub_tasks ,'managers' =>$managers]);
+    
     $stmt=null;
     $stmt1=null;
     $stmt2=null;
     $stmt3=null;
+    $stmt4=null;
+    $stmt5=null;
     }
     catch (Exception $e) {
         // Catch any database-related errors

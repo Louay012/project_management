@@ -1,4 +1,4 @@
-import React, { useState,useContext,useEffect ,useRef} from "react";
+import React, { useState,useContext,useEffect ,useRef, use} from "react";
 //import { UserContext } from './UserContext';
 import { Pie  } from 'react-chartjs-2';
 import { useParams } from "react-router-dom";
@@ -36,14 +36,16 @@ ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 const Project= () => {
   const { userDetails } = useContext(UserContext);
+  const[user_id,setuser_id]=useState(null);
   const formRef = useRef(null);
   const panelRef = useRef(null);
-    const [TaskStats, setTaskStats] = useState(null);
+  const [TaskStats, setTaskStats] = useState(null);
   const [ProjectDetails, setProjectDetails] = useState([]);
   const { project_id } = useParams(); 
   const[tasks,setTasks]=useState([]);
   const[members,setMembers]=useState([]);
   const[SubTasks,setSubTasks]=useState([]);
+  const[ProjectManagers,setProjectManagers]=useState([]);
   const [error, setError] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
   const handleClickOutside = (event) => {
@@ -98,7 +100,7 @@ const Project= () => {
           closeOnClick: true,
         });      
       } else {
-        toast.error(data.message || "Failed to add Task.", {
+        toast.error(data.message || "Failed to send Review.", {
           position: "top-center",
           autoClose: 3000,
           hideProgressBar: true,
@@ -124,6 +126,9 @@ const Project= () => {
   const [taskMember, settaskMember] = useState(1);
   const [taskPriority, setTaskPriority] = useState("Low");
   const [memberEmail, setMemberEmail] = useState("");
+  const [role, setRole] = useState("");
+  const [MemberDescription, setMemberDescription] = useState("");
+
   const hideAddTaskForm=()=>{
     setTaskTitle('')
     setTaskDescription('');
@@ -139,6 +144,9 @@ const Project= () => {
   }
   const hideAddMemberForm=()=>{
     setShowAddMember(false);
+    setRole("");
+    setMemberDescription("");
+    setMemberEmail("");
     formRef.current.reset();
   }
     const showAddMemberForm=()=>{
@@ -150,7 +158,11 @@ const Project= () => {
   const handleDeadlineChange = (e) => setTaskDeadline(e.target.value);
   const handlePriorityChange = (e) => setTaskPriority(e.target.value);
   const handletaskMemberChange = (e) => settaskMember(e.target.value);
+  
   const handleMemberEmailChange = (e) => setMemberEmail(e.target.value);
+  const handleroleChange = (e) => setRole(e.target.value);
+  const handleMemberDescriptionChange = (e) => setMemberDescription(e.target.value);
+
   
   const handleAddTask=async (event) => {
     event.preventDefault();
@@ -202,14 +214,17 @@ const Project= () => {
     console.log("add member")
     try{
       
-      const response=await fetch('http://localhost/project_management/src/API/add_member.php',{
+      const response=await fetch('http://localhost/project_management/src/API/send_invitation.php',{
         method:'POST',
         headers:{
           'Content-Type': 'application/json',
         },
         body:JSON.stringify({
           email:memberEmail,
-          
+          role: role,
+          sender_id: userDetails.user_id,
+          description: MemberDescription,
+          team_id:ProjectDetails[0].team_id
         })
       })
       
@@ -247,7 +262,7 @@ const Project= () => {
             },
             body: JSON.stringify({ 
                 project_id: project_id,
-                user_id: userDetails.user_id,
+       
               }),
         })
         console.log(project_id)
@@ -259,6 +274,7 @@ const Project= () => {
               setTasks(data.tasks)
               setMembers(data.members)
               setSubTasks(data.Sub_tasks)
+              setProjectManagers(data.managers)
               console.log(SubTasks)
               const dataStats=[data.stats[0].completed,data.stats[0].in_progress,data.stats[0].pending];
               setTaskStats({
@@ -277,10 +293,11 @@ const Project= () => {
             }
              else {
             setError(data.message || "Failed to fetch Project Details.");
-
+              console.log(data.message)
             }
       }
         } catch (err) {
+
             setError("An error occurred while fetching Project Details." );
             
         } 
@@ -291,6 +308,12 @@ const Project= () => {
         fetch_details()
     },[project_id,userDetails])  ; 
     
+    useEffect(() => {
+      if(userDetails){
+        setuser_id(userDetails.user_id)
+      }
+  },[userDetails])  ; 
+
     const showerror=()=>{
       toast.error(error, {
         position: 'top-center',
@@ -304,7 +327,7 @@ const Project= () => {
                  setError(null); 
                }
            }, [error]);
-
+           console.log(SubTasks)
   return (
     <div className="w-full h-[100vh] flex p-3 bg-slate-200 gap-2">
         <Sidebar></Sidebar>
@@ -453,7 +476,40 @@ const Project= () => {
                   required
                 />
               </div>
-
+              <div>
+                <label
+                  htmlFor="role"
+                  className="block text-lg font-medium text-gray-700"
+                >
+                  Title
+                </label>
+                <input
+                  id="role"
+                  type="text"
+                  value={role}
+                  onChange={handleroleChange}
+                  className="mt-2 p-3 w-full border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-600"
+                  placeholder="Enter Member Role"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="memberDescription"
+                  className="block text-lg font-medium text-gray-700"
+                >
+                  Description
+                </label>
+                <textarea
+                  id="memberDescription"
+                  value={MemberDescription}
+                  onChange={handleMemberDescriptionChange}
+                  className="mt-2 p-3 w-full border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-600"
+                  placeholder="Enter Role Description"
+                  rows="1"
+                  required
+                />
+              </div>
               
               <div className="flex justify-between mt-6">
                 
@@ -514,11 +570,12 @@ const Project= () => {
                     </div>
                   </div>
          }
-         <div className="flex items-center justify-around">
+         <div className="flex items-center justify-between">
         <span className="text-2xl font-semibold text-slate-800 px-4">Project Tasks :</span>   
-        {ProjectDetails.length > 0 && ProjectDetails[0].role==="manager" && 
+        { ProjectManagers.some((manager) => manager.user_id === user_id) && 
         <button className="btn btn-dark " onClick={showAddTaskForm}><span className="flex items-center gap-2"><IoAddCircleSharp/>Add Task</span></button>}
        </div>
+        {tasks.length>0 ? (
         <table className="w-full border-collapse border border-gray-200 shadow-sm">
         <thead className="bg-gray-100">
           <tr>
@@ -540,7 +597,7 @@ const Project= () => {
           </tr>
         </thead>
         <tbody>
-          {tasks.map((t) => (t.status !== "Awaiting Approval" &&
+          {tasks.map((t) => (
             <tr
               key={t.id}
               
@@ -590,10 +647,16 @@ const Project= () => {
             </tr>
           ))}
         </tbody>
-      </table>
-      <div className="flex items-center justify-around">
+      </table>):(
+
+        <div className="flex items-center justify-center">
+          <strong><span> There are no tasks yet. </span></strong>
+      
+        </div>
+      )}
+      <div className="flex items-center justify-between">
         <span className="text-2xl font-semibold text-slate-800 px-4">Team Members :</span>   
-        {ProjectDetails.length > 0 && ProjectDetails[0].role==="manager" && 
+        { ProjectManagers.some((manager) => manager.user_id === user_id) && 
         <button className="btn btn-dark " onClick={showAddMemberForm}><span className="flex items-center gap-2"><IoAddCircleSharp/>Add member</span></button>}
        </div>
       <table className="w-full border-collapse table-responsive border border-gray-200 shadow-sm">
@@ -631,11 +694,16 @@ const Project= () => {
           ))}
         </tbody>
       </table>
-      {ProjectDetails.length > 0 && ProjectDetails[0].role==="manager" && <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-around">
+
+
+
+      {ProjectManagers.some((manager) => manager.user_id === user_id) &&
+      <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
         <span className="text-2xl font-semibold text-slate-800 px-4">Submitted Tasks :</span>   
         
        </div>
+       {SubTasks.length >0 ? ( 
         <table className="w-full border-collapse border border-gray-200 shadow-sm">
         <thead className="bg-gray-100">
           <tr>
@@ -657,7 +725,7 @@ const Project= () => {
           </tr>
         </thead>
         <tbody>
-          {SubTasks.map((st) => (st.status === "Awaiting Approval" &&
+          {SubTasks.map((st) => (
             <tr
               key={st.submission_id}
               
@@ -701,8 +769,18 @@ const Project= () => {
             </tr>
           ))}
         </tbody>
-      </table> </div>}
+      </table> ):(
+      
+      <div className="flex items-center justify-center">
+      <strong><span> There are no tasks to review. </span></strong>
+      
+     </div>
+         
+        
+      )}
+      </div>}
       {SubTasks.length > 0  && (
+   
    <div ref={panelRef}
       className={`fixed top-0 right-0 rounded-lg h-screen w-1/3 bg-white border-l border-gray-300 shadow-2xl p-10 z-50 transform transition-transform duration-700 ease-in-out ${
       selectedTask ? "translate-x-0" : "translate-x-full"

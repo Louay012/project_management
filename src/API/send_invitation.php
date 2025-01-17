@@ -13,7 +13,10 @@ session_start();
 if($_SERVER['REQUEST_METHOD']=='POST'){
     $input = json_decode(file_get_contents("php://input"), true);
     $email = $input['email']  ;
-    
+    $user_id = $input['sender_id'];
+    $role = $input['role'];
+    $description = $input['description'];
+    $team_id = $input['team_id'];
    
 
    try {
@@ -24,23 +27,27 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     $stmt->bindParam(':email',$email);
     
     $stmt->execute();
+    $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
+if($user){
+    $stmt1=$pdo->prepare("insert into invitations (sender_id,description,recipient_email,role,team_id,sent_at) values(:sender_id,:description,:recipient_email,:role,:team_id,now()) ");
 
-    $stmt1=$pdo->prepare("insert into invvitations (title,user_id,description,status,priority,deadline,project_id,created_at) values(:title,:user_id,:description,'Pending',:priority,:deadline,:project_id,now()) ");
-
-    $stmt1->bindParam(':title',$title);
+    $stmt1->bindParam(':sender_id',$user_id);
     $stmt1->bindParam(':description',$description);
-    $stmt1->bindParam(':priority',$priority);
-    $stmt1->bindParam(':user_id',$user);
-    $stmt1->bindParam(':deadline',$deadline);
-    $stmt1->bindParam(':project_id',$project_id);
+    $stmt1->bindParam(':recipient_email',$email);
+    $stmt1->bindParam(':role',$role);
+    $stmt1->bindParam(':team_id',$team_id);
+  
     $stmt1->execute();
     if($stmt1){
        
-        echo json_encode(['success' => true, 'message' => 'Task added successfully! ']);
+        echo json_encode(['success' => true, 'message' => 'Invitation sent successfully! ']);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Failed to add the task.']);
+        echo json_encode(['success' => false, 'message' => 'Failed to send the invitation.']);
     }
+    }else{
+
     }
+}
     catch (Exception $e) {
         // Catch any database-related errors
         echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);

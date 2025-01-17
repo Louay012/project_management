@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect,useContext } from 'react';
 import img from './Images/Seminar-amico.png'
 import { IoIosLogIn } from "react-icons/io";
-import { Link } from 'react-router-dom';
+import { Link , useNavigate} from 'react-router-dom';
 import { MdVisibility } from "react-icons/md";
 import { MdVisibilityOff } from "react-icons/md";
+import { UserContext } from './UserContext';
+
 const Signup = () => {
+
+  const navigate = useNavigate(); 
+  const { userDetails } = useContext(UserContext);
+  useEffect(() => {
+      if (userDetails) {
+        navigate("/Schedule");
+      }
+    }, [userDetails,navigate]);
+
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

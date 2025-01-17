@@ -13,6 +13,7 @@ session_start();
 if($_SERVER['REQUEST_METHOD']=='POST'){
     $input = json_decode(file_get_contents("php://input"), true);
     $user_id = $input['user_id']  ;
+    $email= $input['email'];
    
 
    try {
@@ -65,15 +66,23 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     $stmt1->execute();
     $tasks = $stmt1->fetchAll(PDO::FETCH_ASSOC);
     
-   
+    $stmt2=$pdo->prepare("SELECT*
+FROM 
+    invitations 
+
+WHERE
+    recipient_email=:email ");
+
+$stmt2->bindParam(':email',$email);
+
+$stmt2->execute();
+$invitations = $stmt2->fetchAll(PDO::FETCH_ASSOC);
   
     $stmt=null;
-   
-  
     $stmt1=null;
+    $stmt2=null;
 
-
-    echo json_encode(['success' => true, 'data1'=>$projects ,'data2'=> $tasks ]);
+    echo json_encode(['success' => true, 'data1'=>$projects ,'data2'=> $tasks,'data3'=> $invitations ]);
     }
     catch (Exception $e) {
         // Catch any database-related errors

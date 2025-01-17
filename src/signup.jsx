@@ -5,8 +5,12 @@ import { Link , useNavigate} from 'react-router-dom';
 import { MdVisibility } from "react-icons/md";
 import { MdVisibilityOff } from "react-icons/md";
 import { UserContext } from './UserContext';
+import toast from 'react-hot-toast';
 
 const Signup = () => {
+  /*const regex = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
+  const [validPassword , setvalidPassword] =useState(false);*/
+ 
 
   const navigate = useNavigate(); 
   const { userDetails } = useContext(UserContext);
@@ -20,15 +24,64 @@ const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
-
   const changevisible = () => {
     setPasswordVisible((prev) => !prev);
   };
-  const handleSubmit = (e) => {
+  const [error, setError] = useState(null);
+  const handleSubmit = async(e) => {
     e.preventDefault();
+    try{
+      //if(validPassword){
+      const response = await fetch('http://localhost/project_management/src/API/signup.php',{
+          method:'POST',
+          headers:{
+                  'Content-Type': 'application/json',
+              },
+          body:JSON.stringify({
+              username: username,
+              email:email,
+              password: password,
+          })
+      })
+      
+      const data = await response.json();
+      if(data.success){
+          toast.success(data.message, {
+              position: 'top-center',
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,});
+          navigate('/login');
+      }
 
-    console.log({ username, password });
-  };
+      else{
+          setError(data.message);
+      }
+  /*}
+  else{
+      setError("password must verify conditions")
+  }*/
+  }
+  catch(error){
+      setError('Error during signup:', error);
+  }
+}
+const showerror=()=>{
+  toast.error(error, {
+    position: 'top-center',
+    autoClose: 3000, 
+    hideProgressBar: true,
+    closeOnClick: true,});
+}
+useEffect(() => {
+  if (error) {
+    showerror();
+    setError(null); 
+  }
+}, [error]);
+/*useEffect(() => {
+  setvalidPassword(regex.test(password));   
+}, [password])*/
 
   return (
     <div className="h-screen flex items-center justify-center bg-gradient-to-r from-gray-50  to-slate-200">

@@ -27,12 +27,7 @@ const Sidebar = () => {
   const [Teamname, setTeamname] = useState('');
   const {userDetails, setUserDetails } = useContext(UserContext);
   const [user_id, setuser_id] = useState('');
-  
-  useEffect(() => {
-        if(userDetails){
-          setuser_id(userDetails.user_id)
-        }
-    },[userDetails])  ; 
+ 
  
   const hideAddProjectForm=()=>{
     setProjectTitle('')
@@ -95,6 +90,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     if(userDetails){
+      setuser_id(userDetails.user_id)
     setUsername(userDetails.username)
     setEmail(userDetails.email)
     }
@@ -109,6 +105,7 @@ const Sidebar = () => {
   const panelRef = useRef(null);
   const [tasks,setTasks]=useState([]);
   const [selfProjects,setSelfProjects]=useState([]);
+  const [invitations,setInvitations]=useState([]);
   const [isInboxOpen, setIsInboxOpen] = useState(false);
   const inboxButtonRef = useRef(null);
   
@@ -177,6 +174,7 @@ const Sidebar = () => {
               },
               body: JSON.stringify({
                 user_id: userDetails.user_id,
+                email:email
               }),
             }
           );
@@ -186,11 +184,13 @@ const Sidebar = () => {
           if (data.success) {
             setSelfProjects(data.data1);
             setTasks(data.data2)
+            setInvitations(data.data3)
           } else {
             setError(data.message || "Failed to fetch Notifications.");
           }
         }
         } catch (err) {
+          console.log(err)
           setError("An error occurred while fetching Notifications.");
         }
       };
@@ -425,7 +425,7 @@ const Sidebar = () => {
   <h2 className="text-xl font-bold text-gray-700 flex items-center gap-2"><IoIosNotifications></IoIosNotifications> Notifications</h2>
   <hr className="my-3" />
   <div className="overflow-y-auto h-full">
-    {selfProjects.length > 0 || tasks.length > 0 ? (
+    {selfProjects.length > 0 || tasks.length > 0 || invitations.length > 0 ? (
       <ul className="">
         {selfProjects.length > 0 &&
           selfProjects.map((project) => (
@@ -453,6 +453,19 @@ const Sidebar = () => {
               className="text-sm text-gray-600 no-underline"
             >
               <strong>There are Tasks to do</strong>
+            </Link>
+          </li>
+        )}
+        {invitations.length > 0 && (
+          <li
+            onClick={toggleInbox}
+            className="hover:bg-slate-100 cursor-pointer p-2"
+          >
+            <Link
+              to={"/menu"}
+              className="text-sm text-gray-600 no-underline"
+            >
+              <strong>There are Invitations to see </strong>
             </Link>
           </li>
         )}

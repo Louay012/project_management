@@ -60,6 +60,7 @@ const Menu= () => {
               const submissionCounts = data.task_submitted.map((t) => t.nb_submissions); 
               const dates=data.task_submitted.map((t)=>t.submission_date)
               setInvitations(data.invitations)
+              console.log(invitations)
               setTaskCount({
                 labels: dates,
                 datasets: [
@@ -207,7 +208,7 @@ const Menu= () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {invitations.map((i) => (
+                        {invitations.length>0 && invitations.map((i) => (
                         <tr
                             key={i.id}
                             className="hover:bg-gray-100 transition-colors duration-200"

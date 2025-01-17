@@ -17,6 +17,7 @@ import { UserContext } from './UserContext';
 import { GrSchedulePlay } from "react-icons/gr";
 import { TbLayoutDashboard } from "react-icons/tb";
 import { IoIosAddCircleOutline } from "react-icons/io";
+import Swal from 'sweetalert2';
 
 const Sidebar = () => {
   const navigate = useNavigate(); 
@@ -46,6 +47,29 @@ const Sidebar = () => {
   const handleTeamnameChange = (e) => setTeamname(e.target.value);
   const handleAddProject=async (event) => {
     event.preventDefault();
+    const today = new Date().toISOString().split('T')[0]; 
+              if (projectDeadline <= today) {
+                  setError("Date must be after today.");
+                  return;
+              }
+              const result = await Swal.fire({
+                title: 'Confirm Task Details',
+        html: `
+          <div style="text-align: left;">
+            <p><strong>Title:</strong> ${projectTitle}</p>
+            <p><strong>Description:</strong> ${projectDescription}</p>
+            <p><strong>Deadline:</strong> ${projectDeadline}</p>
+            <p><strong>Team Name:</strong> ${Teamname}</p>
+        `,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6', 
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Add It!',
+        cancelButtonText: 'Cancel',
+      });
+            
+              if (result.isConfirmed) {
     try{
       const response=await fetch('http://localhost/project_management/src/API/add_project.php',{
         method:'POST',
@@ -65,7 +89,9 @@ const Sidebar = () => {
   
       
       if (data.success) {
+        Swal.fire('Created!', 'The project has been created successfully.', 'success');
         const project_id = data.project_id
+        hideAddProjectForm() 
         fetch_Projects()
         navigate(`/project/${project_id}`)
       } else {
@@ -82,7 +108,7 @@ const Sidebar = () => {
       setError("An error occurred while creating a Project.");
     }
    
-    hideAddProjectForm() 
+  }
   }
 
   const[username, setUsername]=useState('')

@@ -1,5 +1,4 @@
 import React, { useState,useContext,useEffect ,useRef, use} from "react";
-
 import { Pie  } from 'react-chartjs-2';
 import { useParams } from "react-router-dom";
 import Sidebar from "./sidebar";
@@ -28,6 +27,8 @@ import { FaUsersGear } from "react-icons/fa6";
 import { MdAlternateEmail } from "react-icons/md";
 import { AiOutlineFileSearch } from "react-icons/ai";
 import { UserContext } from './UserContext';
+import Swal from 'sweetalert2';
+
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 <link
   href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -117,7 +118,7 @@ const Project= () => {
 
   
 
-
+ 
   const [showAddMember, setShowAddMember] = useState(false);
   const [showAddTask, setShowAddTask] = useState(false);
   const [taskTitle, setTaskTitle] = useState('');
@@ -128,7 +129,8 @@ const Project= () => {
   const [memberEmail, setMemberEmail] = useState("");
   const [role, setRole] = useState("");
   const [MemberDescription, setMemberDescription] = useState("");
-
+  
+  
   const hideAddTaskForm=()=>{
     setTaskTitle('')
     setTaskDescription('');
@@ -163,9 +165,84 @@ const Project= () => {
   const handleroleChange = (e) => setRole(e.target.value);
   const handleMemberDescriptionChange = (e) => setMemberDescription(e.target.value);
 
+  const handlecompleteProject=async()=>{
+    const allTasksCompleted = tasks.every(task => task.status === "Completed");
+    if (allTasksCompleted){
+      const result = await Swal.fire({
+        title: 'Confirm Project Completion',
+html: 'Do you want to finish this project?',
+icon: 'info',
+showCancelButton: true,
+confirmButtonColor: '#3085d6', 
+cancelButtonColor: '#d33',
+confirmButtonText: 'Yes!',
+cancelButtonText: 'Cancel',
+});
+    
+      if (result.isConfirmed) {
+try{
+  console.log(taskMember)
+  const response=await fetch('http://localhost/project_management/src/API/complete_project.php',{
+    method:'POST',
+    headers:{
+      'Content-Type': 'application/json',
+    },
+    body:JSON.stringify({
+ 
+      project_id:project_id
+    })
+  })
   
+  const data=await response.json();
+
+  
+  if (data.success) {
+    Swal.fire('Completed!', 'The Project has been completed successfully.', 'success');
+    fetch_details()
+       
+  } else {
+    toast.error(data.message || "Failed to complete Project", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+    });
+  }
+  
+} catch (err) {
+  setError("An error occurred while completing project.");
+}
+  }  
+}else{
+      setError("All tasks must be completed")
+    }
+}
   const handleAddTask=async (event) => {
     event.preventDefault();
+    const today = new Date().toISOString().split('T')[0]; 
+          if (taskDeadline <= today) {
+              setError("Date must be after today.");
+              return;
+          }
+          const result = await Swal.fire({
+            title: 'Confirm Task Details',
+    html: `
+      <div style="text-align: left;">
+        <p><strong>Title:</strong> ${taskTitle}</p>
+        <p><strong>Description:</strong> ${taskDescription}</p>
+        <p><strong>Priority:</strong> ${taskPriority}</p>
+        <p><strong>Task member:</strong> ${taskMember}</p>
+        <p><strong>Deadline:</strong> ${taskDeadline}</p>
+    `,
+    icon: 'info',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6', 
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, Add It!',
+    cancelButtonText: 'Cancel',
+  });
+        
+          if (result.isConfirmed) {
     try{
       console.log(taskMember)
       const response=await fetch('http://localhost/project_management/src/API/add_task.php',{
@@ -187,13 +264,10 @@ const Project= () => {
   
       
       if (data.success) {
+        Swal.fire('Added!', 'The Task has been added successfully.', 'success');
         fetch_details()
-        toast.success(data.message, {
-          position: 'top-center',
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-        });      
+       
+        hideAddTaskForm()       
       } else {
         toast.error(data.message || "Failed to add Task.", {
           position: "top-center",
@@ -207,11 +281,28 @@ const Project= () => {
       setError("An error occurred while adding a Task.");
     }
    
-    hideAddTaskForm() 
+    
   }
+}
   const handleAddMember=async (event) => {
     event.preventDefault();
-    console.log("add member")
+    const result = await Swal.fire({
+      title: 'Confirm Invitation Details',
+html: `
+<div style="text-align: left;">
+  <p><strong>Member Email:</strong> ${memberEmail}</p>
+  <p><strong>Role:</strong> ${role}</p>
+  <p><strong>Role Description:</strong> ${MemberDescription}</p>
+`,
+icon: 'info',
+showCancelButton: true,
+confirmButtonColor: '#3085d6', 
+cancelButtonColor: '#d33',
+confirmButtonText: 'Yes!',
+cancelButtonText: 'Cancel',
+});
+  
+    if (result.isConfirmed) {
     try{
       
       const response=await fetch('http://localhost/project_management/src/API/send_invitation.php',{
@@ -232,24 +323,21 @@ const Project= () => {
   
       
       if (data.success) {
+        Swal.fire('', 'The invitation has been sent successfully.', 'success');
         fetch_details()
-        toast.success(data.message, {
-          position: 'top-center',
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-        });      
+        
+        hideAddMemberForm()      
       } else {
         setError(data.message || "Failed to send invitation.")
         
       }
-      
+    
     } catch (err) {
       console.log(err)
       setError("An error occurred while adding a Member.");
     }
       
-    hideAddMemberForm() 
+  }
   }
   const fetch_details=async () => {
     //setSubTasks([])
@@ -544,8 +632,10 @@ const Project= () => {
                           <p className="text-4xl"><strong>Project:</strong> {ProjectDetails[0].project_title}</p>
                           <p><strong>Description:</strong> {ProjectDetails[0].description}</p>
                           <p><strong>Created at:</strong> {ProjectDetails[0].created_at}</p>
-                          
-                          
+                          <div className="flex justify-center">
+                          { ProjectManagers.some((manager) => manager.user_id === user_id) && 
+        <button className="btn btn-dark " onClick={handlecompleteProject}><span className="flex items-center gap-2"><IoAddCircleSharp/>Complete Project</span></button>}
+                          </div>
                         </div>
                 </div>
                 <div className="bg-gray-50 p-3 border-1 rounded-lg shadow-md flex justify-around w-11/12 md:w-2/5 items-center h-60"> 

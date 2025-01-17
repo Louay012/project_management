@@ -245,6 +245,7 @@ const Project= () => {
       }
       
     } catch (err) {
+      console.log(err)
       setError("An error occurred while adding a Member.");
     }
       
@@ -297,7 +298,8 @@ const Project= () => {
             }
       }
         } catch (err) {
-
+          
+          
             setError("An error occurred while fetching Project Details." );
             
         } 
@@ -327,7 +329,7 @@ const Project= () => {
                  setError(null); 
                }
            }, [error]);
-           console.log(SubTasks)
+      
   return (
     <div className="w-full h-[100vh] flex p-3 bg-slate-200 gap-2">
         <Sidebar></Sidebar>

@@ -56,7 +56,7 @@ const Menu= () => {
         })
         
         const data = await response.json();
-      
+        if (data.success){
               const submissionCounts = data.task_submitted.map((t) => t.nb_submissions); 
               const dates=data.task_submitted.map((t)=>t.submission_date)
               setInvitations(data.invitations)
@@ -86,6 +86,7 @@ const Menu= () => {
                   },
                 ],
               });
+
               setLoading(false)
             }
              else {
@@ -93,6 +94,7 @@ const Menu= () => {
 
             }
       }
+    }
         catch (err) {
             setError(err||"An error occurred while fetching ." );
             

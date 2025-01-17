@@ -16,6 +16,8 @@ import { UserContext } from './UserContext';
 import { useNavigate } from 'react-router-dom';
 import { GrSchedulePlay } from "react-icons/gr";
 import { TbLayoutDashboard } from "react-icons/tb";
+import { IoIosAddCircleOutline } from "react-icons/io";
+
 const Sidebar = () => {
   const {userDetails, setUserDetails } = useContext(UserContext);
   const[username, setUsername]=useState('')
@@ -217,7 +219,12 @@ const Sidebar = () => {
                 <span>{p.project_title}</span>
               </Link>
             </li>)}
-            
+            <li >
+              <div>
+              <IoIosAddCircleOutline className="w-6 h-6"/>
+              <span>Create Project</span>
+            </div>
+            </li>
           </ul>
         </div>
       </div>

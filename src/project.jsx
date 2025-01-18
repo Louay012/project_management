@@ -27,6 +27,7 @@ import { FaUsersGear } from "react-icons/fa6";
 import { MdAlternateEmail } from "react-icons/md";
 import { AiOutlineFileSearch } from "react-icons/ai";
 import { UserContext } from './UserContext';
+import { MdDeleteOutline } from "react-icons/md";
 import Swal from 'sweetalert2';
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
@@ -338,6 +339,44 @@ cancelButtonText: 'Cancel',
     }
       
   }
+  }
+  const handleDelete=async (m) => {
+
+
+    try{
+      
+      const response=await fetch('http://localhost/project_management/src/API/delete_member.php',{
+        method:'POST',
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        body:JSON.stringify({
+            member_id:m.id
+          
+        })
+      })
+      
+      const data=await response.json();
+  
+      
+      if (data.success) {
+        fetch_details()
+        toast.success(data.message, {
+          position: 'top-center',
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+        });      
+      } else {
+        setError(data.message || "Failed to delete member.")
+        
+      }
+      
+    } catch (err) {
+      setError("An error occurred while deleting member.");
+    }
+      
+   
   }
   const fetch_details=async () => {
     //setSubTasks([])
@@ -690,6 +729,7 @@ cancelButtonText: 'Cancel',
             <th className="px-6 py-3 border border-gray-300 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
             <div className="flex items-center justify-start gap-2"><RiProgress3Line/> Status</div>
             </th>
+            
           </tr>
         </thead>
         <tbody>
@@ -740,6 +780,7 @@ cancelButtonText: 'Cancel',
                  {t.status}
                 </span>
               </td>
+              
             </tr>
           ))}
         </tbody>
@@ -767,7 +808,10 @@ cancelButtonText: 'Cancel',
             <th className="px-6 py-3 border border-gray-300 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
             <div className="flex items-center justify-start gap-2"><FaUsersGear/> role</div>
             </th>
-          
+            { ProjectManagers.some((manager) => manager.user_id === user_id) && 
+            <th className="">
+            </th>
+            }
           </tr>
         </thead>
         <tbody>
@@ -785,7 +829,17 @@ cancelButtonText: 'Cancel',
               <td className="px-6 py-4 border border-gray-300 text-sm text-gray-900">
                 {m.role}
               </td>
-              
+              { ProjectManagers.some((manager) => manager.user_id === user_id) && 
+            <td className="py-1 ">
+              <div className="flex justify-center items-center">
+              <button  type="submit"  onClick={() => {
+                                                  
+                        handleDelete(m); 
+                        }} ><MdDeleteOutline className="h-6 w-6 rounded-3xl text-gray-500  hover:text-red-500"/>
+              </button>
+              </div>
+            </td>
+            }
             </tr>
           ))}
         </tbody>

@@ -13,12 +13,12 @@ import { TbLogout2 } from "react-icons/tb";
 import { IoIosNotifications } from "react-icons/io";
 import { FaTasks } from "react-icons/fa";
 import { UserContext } from './UserContext';
-
+import { FaClipboardUser } from "react-icons/fa6";
 import { GrSchedulePlay } from "react-icons/gr";
 import { TbLayoutDashboard } from "react-icons/tb";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import Swal from 'sweetalert2';
-
+import { FaUserCog } from "react-icons/fa";
 const Sidebar = () => {
   const navigate = useNavigate(); 
   const[showCreateProject,setShowCreateProject]=useState(false)
@@ -344,8 +344,9 @@ const Sidebar = () => {
         </div>
       </div>)}
       {/* Logo */}
-      <div className="px-6 py-4 border-b">
+      <div className=" py-4 border-b flex flex-col items-center justify-around">
         <h1 className="text-lg font-bold text-gray-800">TaskFlow</h1>
+        
       </div>
 
       {/* Navigation */}
@@ -399,7 +400,15 @@ const Sidebar = () => {
               <span>Tasks</span>
             </Link>
           </li>
-          
+          <li>
+          <Link
+              to="/profile"
+              
+              className="flex items-center gap-3 p-2 text-gray-700 cursor-pointer  hover:bg-slate-300 rounded-md no-underline"
+            >
+              <FaUserCog  className="w-6 h-6" />
+              <span >Profile</span>
+            </Link></li>
         </ul>
 
         {/* Project Section */}
@@ -418,8 +427,8 @@ const Sidebar = () => {
             <li >
               <div className="flex items-center gap-3 p-2 text-gray-700 hover:bg-slate-300 no-underline rounded-md cursor-pointer" onClick={showAddProjectForm}>
                 
-              <IoIosAddCircleOutline className="w-6 h-6"/>
-              <span>Create Project</span>
+              <IoIosAddCircleOutline className="w-5 h-5"/>
+              <span>Create</span>
             </div>
             </li>
           </ul>
@@ -432,16 +441,7 @@ const Sidebar = () => {
           <span className="hidden md:block text-inherit">Logout</span>
           </button>
 
-      {/* Footer */}
-     {/*<div className="px-6 py-4 border-t">
-        <div className="flex items-center space-x-3">
-          <UserCircleIcon className=""></UserCircleIcon>
-          <div>
-            <p className="text-sm font-medium text-gray-800">{username}</p>
-            <p className="text-xs text-gray-500">{email}</p>
-          </div>
-        </div>
-      </div>*/}
+    
       
       <div ref={panelRef}
   className={`fixed top-0 left-0 rounded-lg h-screen w-60 bg-white border-l border-gray-300 shadow-2xl px-2 py-5 z-50 transform transition-transform duration-700 ease-in-out ${

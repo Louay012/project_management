@@ -78,7 +78,7 @@ const Teams= () => {
             {teams.map((team) => (
               <Link className="no-underline"
               to={`/team/${team.team_id}`}
-              state={{ team }} ><TeamCard key={team.team_id} name={team.team_name} initial={team.team_name[0] } project={team.project_title}
+              ><TeamCard key={team.team_id} name={team.team_name} initial={team.team_name[0] } project={team.project_title}
                nb_user={team.nb_user}/></Link>
             ))}
           </div>

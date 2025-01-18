@@ -8,7 +8,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { LuMessageCircleMore } from "react-icons/lu";
 import { CgAttachment } from "react-icons/cg";
 import { FaFileArrowDown } from "react-icons/fa6";
-import { IoMdCheckmark } from "react-icons/io";
+
 import { MdOutlineCreate } from "react-icons/md";
 import { TbFlagMinus } from "react-icons/tb";
 import { TbFlagExclamation } from "react-icons/tb";
@@ -349,8 +349,8 @@ cancelButtonText: 'Cancel',
           'Content-Type': 'application/json',
         },
         body:JSON.stringify({
-            member_id:m.id
-          
+            member_id:m.id,
+            team_id:m.team_id,
         })
       })
       
@@ -687,7 +687,7 @@ cancelButtonText: 'Cancel',
                           <p><strong>Created at:</strong> {ProjectDetails[0].created_at}</p>
                           <div className="flex justify-center">
                           { ProjectManagers.some((manager) => manager.user_id === user_id) && 
-        <button className="btn btn-dark " onClick={handlecompleteProject}><span className="flex items-center gap-2"><IoAddCircleSharp/>Complete Project</span></button>}
+        <button className="btn btn-success " onClick={handlecompleteProject}><span className="flex items-center gap-2"><FaCheckCircle/>Complete Project</span></button>}
                           </div>
                         </div>
                 </div>

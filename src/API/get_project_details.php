@@ -72,6 +72,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     $stats = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
     $stmt3=$pdo->prepare("SELECT
+                        t.team_id team_id,
                         u.user_id id,
                         u.username,
                         u.email,

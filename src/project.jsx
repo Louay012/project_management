@@ -1,6 +1,6 @@
-import React, { useState,useContext,useEffect ,useRef, use} from "react";
+import React, { useState,useContext,useEffect ,useRef} from "react";
 import { Pie  } from 'react-chartjs-2';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate  } from "react-router-dom";
 import Sidebar from "./sidebar";
 import toast from 'react-hot-toast';
 import { MdCancel } from "react-icons/md";
@@ -37,6 +37,7 @@ ChartJS.register(ArcElement, Tooltip, Legend, Title);
 />
 
 const Project= () => {
+  const navigate =useNavigate()
   const { userDetails } = useContext(UserContext);
   const[user_id,setuser_id]=useState(null);
   const formRef = useRef(null);
@@ -50,6 +51,11 @@ const Project= () => {
   const[ProjectManagers,setProjectManagers]=useState([]);
   const [error, setError] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
+  
+
+  
+
+
   const handleClickOutside = (event) => {
     if (
       panelRef.current &&
@@ -202,12 +208,8 @@ try{
     fetch_details()
        
   } else {
-    toast.error(data.message || "Failed to complete Project", {
-      position: "top-center",
-      autoClose: 3000,
-      hideProgressBar: true,
-      closeOnClick: true,
-    });
+    setError(data.message || "Failed to complete Project") 
+
   }
   
 } catch (err) {
@@ -270,12 +272,8 @@ try{
        
         hideAddTaskForm()       
       } else {
-        toast.error(data.message || "Failed to add Task.", {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-        });
+        setError(data.message || "Failed to add Task.") 
+          
       }
       
     } catch (err) {
@@ -424,7 +422,7 @@ cancelButtonText: 'Cancel',
             }
              else {
             setError(data.message || "Failed to fetch Project Details.");
-              console.log(data.message)
+        
             }
       }
         } catch (err) {
@@ -441,6 +439,7 @@ cancelButtonText: 'Cancel',
     },[project_id,userDetails])  ; 
     
     useEffect(() => {
+      console.log(userDetails)
       if(userDetails){
         setuser_id(userDetails.user_id)
       }
@@ -453,13 +452,28 @@ cancelButtonText: 'Cancel',
         hideProgressBar: true,
         closeOnClick: true,});
     }
+
    useEffect(() => {
                if (error) {
                  showerror();
                  setError(null); 
                }
            }, [error]);
-      
+    
+
+    useEffect(() => {
+      console.log(user_id)
+      console.log(members)
+      if(user_id && members.length>0){
+        if (!members.some(member => member.id === user_id)) {
+          navigate("/not-authorized");
+      }    
+    }
+  }, [user_id,members]);
+          
+ 
+          
+          
   return (
     <div className="w-full h-[100vh] flex p-3 bg-slate-200 gap-2">
         <Sidebar></Sidebar>

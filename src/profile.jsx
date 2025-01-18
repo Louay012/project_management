@@ -16,6 +16,7 @@ import { FaRegEdit } from "react-icons/fa";
 
 const Profile= () => {
   const { userDetails } = useContext(UserContext);
+  
    const [error, setError] = useState(null);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -24,33 +25,48 @@ const Profile= () => {
     const changevisible = () => {
         setPasswordVisible((prev) => !prev);
       };
-  const editProfile=async () => {
 
+        useEffect(() => {
+          if(userDetails){
+            setUsername(userDetails.username)
+            setEmail(userDetails.email)
+          }
+        },[userDetails])  ;
+         
+
+  const editProfile=async (e) => {
+    e.preventDefault();
     try{
       
       if(userDetails){
-      const response= await fetch('http://localhost/project_management/src/API/menu.php' ,{
+      const response= await fetch('http://localhost/project_management/src/API/update_user.php' ,{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ 
-                
+                user_id: userDetails.user_id,
+                username:username,
+                password:password
               }),
         })
         
         const data = await response.json();
-        if (data.success){
-              
+            if (data.success){
+              toast.success(data.message, {
+                position: 'top-center',
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,});
             }
              else {
-            setError( "Failed to fetch  data.");
+            setError( "Failed to change your informations.");
 
             }
       }
     }
         catch (err) {
-            setError(err||"An error occurred while fetching ." );
+            setError(err||"An error occurred while changing your informations ." );
             
         } 
         
@@ -97,12 +113,11 @@ const Profile= () => {
                         <label htmlFor="username" className="block text-gray-700">Email :</label>
                         <input 
                         type="email" 
-                        placeholder="Enter your email" 
                         name="email" 
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400" 
-                        required 
+                        disabled 
                         />
                     </div>
                     
@@ -112,7 +127,7 @@ const Profile= () => {
                                             <div className="relative w-full">
                                                     <input 
                                                     type={passwordVisible ? "text" : "password"}
-                                                    placeholder='Enter your password'
+                                                    placeholder='Enter new password'
                                                     value={password}
                                                     onChange={(e) => setPassword(e.target.value)}
                                                     className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400" 
@@ -132,7 +147,6 @@ const Profile= () => {
                                             </div>
                             
                     </div>
-
                     <button 
                         type="submit" 
                         className="w-full py-3 bg-zinc-800 text-white font-semibold flex items-center justify-center gap-2

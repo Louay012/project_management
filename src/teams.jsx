@@ -21,7 +21,7 @@ const Teams= () => {
   const fetch_Teams=async () => {
     try{
       
-        
+        if(userDetails){
       const response= await fetch('http://localhost/project_management/src/API/get_teams.php' ,{
             method: 'POST',
             headers: {
@@ -42,6 +42,7 @@ const Teams= () => {
              else {
             setError(data.message || "Failed to fetch Teams.");
             }
+          }
         } catch (err) {
             setError("An error occurred while fetching Teams." );
         } 

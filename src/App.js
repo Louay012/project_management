@@ -12,7 +12,9 @@ import Team from './team.jsx'
 import Menu from './Menu.jsx';
 import Profile from './profile.jsx';
 import { UserProvider } from './UserContext'; 
+import AboutPage from './about.jsx';
 import ProtectedRoute from './ProtectedRoute';
+import ErrorPage from './not-authorized.jsx';
 
 const router = createBrowserRouter([
   {
@@ -55,6 +57,14 @@ const router = createBrowserRouter([
   {
     path:"/profile",
     element:<ProtectedRoute><Profile/></ProtectedRoute>
+  },
+  {
+    path:"/about",
+    element:<AboutPage/>
+  },
+  {
+    path:"/not-authorized",
+    element:<ErrorPage/>
   },
 ])
 function App() {

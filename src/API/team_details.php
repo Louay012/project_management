@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $team_id = $input['team_id'];
 
     try {
-        // SQL Query
+       
         $stmt = $pdo->prepare(
             "SELECT
                u.username username,

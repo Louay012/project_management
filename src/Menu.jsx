@@ -246,7 +246,7 @@ const Menu= () => {
                         <th className="px-6 py-3 "><span className="flex items-center gap-2"><FaUsersGear/>Role</span></th>
                         <th className="px-6 py-3 "><span className="flex items-center gap-2"><TiGroup/>Team</span></th>
                         <th className="px-6 py-3 "><span className="flex items-center gap-2"><MdOutlineCreate/> Sent </span></th>
-                        <th className="px-6 py-3 "><span className="flex items-center gap-2"><CgDanger/> Expires </span></th>
+                        
                         <th className="px-6 py-3 "></th>
                         <th className="px-6 py-3 "></th>
                         </tr>
@@ -263,7 +263,7 @@ const Menu= () => {
                             <td className="px-6 py-4 text-sm text-gray-600">{i.role}</td>
                             <td className="px-6 py-4 text-sm text-gray-600">{i.team}</td>
                             <td className="px-6 py-4 text-sm text-gray-600">{i.sent}</td>
-                            <td className="px-6 py-4 text-sm text-gray-600">{i.expires}</td>
+                            
                             <td className="px-6 py-4 text-sm text-gray-800 w-6  ">
                             <button  type="submit"  onClick={() => {
                                     

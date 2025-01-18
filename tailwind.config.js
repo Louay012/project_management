@@ -7,6 +7,9 @@ module.exports = {
         '700': '700ms',
         '1000': '1000ms',
       },
+      zIndex: {
+        100: '100',
+      },
     },
   },
   plugins: [],

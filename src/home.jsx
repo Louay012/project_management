@@ -27,9 +27,7 @@ const Home = () => {
             <Link to="/about" className="text-gray-600 no-underline hover:text-blue-600">
               About
             </Link>
-            <Link to="/features" className="text-gray-600 no-underline hover:text-blue-600">
-              Features
-            </Link>
+            
            
             <Link to="/contact" className="text-gray-600 no-underline hover:text-blue-600">
               Contact
@@ -44,8 +42,7 @@ const Home = () => {
         <div className="text-center py-32">
           <div className="container mx-auto">
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
-              Streamline Your Goals with Our KPI <br /> & Project Management
-              Platform
+            Transform Your Workflow with Our Seamless<br></br> Project Management Platform
             </h2>
             <p className="text-gray-600 mb-8">
               Our innovative platform offers a robust solution to help you stay

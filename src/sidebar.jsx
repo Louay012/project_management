@@ -248,8 +248,8 @@ const Sidebar = () => {
     
     <div className="h-[100vh] w-48   flex flex-col rounded fixed left-0 top-0 bottom-0 ">
       {showCreateProject &&(
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50">
-        <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md z-50 ">
+        <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg ">
           <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">
             Create New Project
           </h2>

@@ -45,7 +45,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                         t.deadline
                     from
                     tasks t  ,projects p
-                    WHERE t.project_id = p.project_id and p.project_id=:project_id");
+                    WHERE t.project_id = p.project_id and p.project_id=:project_id order by t.status desc");
 
     $stmt1->bindParam(':project_id',$project_id);
     $stmt1->execute();

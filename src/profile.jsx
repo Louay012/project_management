@@ -92,73 +92,93 @@ const Profile= () => {
     <div className="w-full h-[100vh] flex p-3 bg-slate-200 gap-2">
         <Sidebar></Sidebar>
         <div className="overflow-auto flex-1 p-6 ml-56 bg-gray-50  h-full rounded-lg shadow-md flex w-full justify-center items-center m gap-4">
-            <div className='flex flex-col   w-11/12 md:w-1/2'>
-                    <div >
-                        <h2 className="text-3xl font-bold text-center  text-gray-800 ">Manage Your Account </h2>
-                        <h2 className="text-base font-thin text-center text-gray-800">Update your personal details and preferences below.</h2>
-                    </div>
-                    <form onSubmit={editProfile} className="flex flex-col justify-around gap-4 ">
-                    <div className='flex flex-col gap-2'>
-                        <label htmlFor="username" className="block text-gray-700">Username :</label>
-                        <input 
-                        type="text" 
-                        placeholder='Enter your username'
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400" 
-                        required 
-                        />
-                    </div>
-                    <div className='flex flex-col gap-2'>
-                        <label htmlFor="username" className="block text-gray-700">Email :</label>
-                        <input 
-                        type="email" 
-                        name="email" 
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400" 
-                        disabled 
-                        />
-                    </div>
-                    
-                        <div className='flex flex-col gap-2'>
-                                            <label htmlFor="password" className="block text-gray-700">Password :</label>
-                                            
-                                            <div className="relative w-full">
-                                                    <input 
-                                                    type={passwordVisible ? "text" : "password"}
-                                                    placeholder='Enter new password'
-                                                    value={password}
-                                                    onChange={(e) => setPassword(e.target.value)}
-                                                    className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400" 
-                                                    required 
-                                                    />
-                                                        <button
-                                                        type="button"
-                                                        onClick={changevisible}
-                                                        className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
-                                                        >
-                                                        {passwordVisible ? (
-                                                            <MdVisibility className='w-5 h-5'/>
-                                                        ) : (
-                                                            <MdVisibilityOff className='w-5 h-5'/>
-                                                        )}
-                                                        </button>
-                                            </div>
-                            
-                    </div>
-                    <button 
-                        type="submit" 
-                        className="w-full py-3 bg-zinc-800 text-white font-semibold flex items-center justify-center gap-2
-                        rounded-md hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-slate-400"
-                    >
-                    <i><FaRegEdit className='h-8 w-6'></FaRegEdit></i>
-                        Edit Profile
-                    </button>
-                    </form>
+                  <div className="flex flex-col w-11/12 md:w-1/2  ">
+              
+              <div>
+                  <h2 className="text-3xl font-bold text-center text-gray-800">
+                      Manage Your Account
+                  </h2>
+                  <h2 className="text-base font-thin text-center text-gray-800">
+                      Update your personal details and preferences below.
+                  </h2>
+              </div>
 
-                    
+             
+              <form onSubmit={editProfile} className="flex flex-col justify-around gap-4">
+                  
+                  <div className="flex flex-col gap-2">
+                      <label htmlFor="username" className="block text-gray-700">
+                          Username:
+                      </label>
+                      <input
+                          type="text"
+                          id="username"
+                          placeholder="Enter your username"
+                          value={username}
+                          onChange={(e) => setUsername(e.target.value)}
+                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400"
+                          required
+                      />
+                  </div>
+
+                
+                  <div className="flex flex-col gap-2">
+                      <label htmlFor="email" className="block text-gray-700">
+                          Email:
+                      </label>
+                      <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400"
+                          disabled
+                      />
+                  </div>
+
+           
+                  <div className="flex flex-col gap-2">
+                      <label htmlFor="password" className="block text-gray-700">
+                        Password:
+                      </label>
+                      <div className="relative w-full">
+                        <input
+                          type={passwordVisible ? "text" : "password"}
+                          id="password"
+                          placeholder="Enter new password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="w-full p-3 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400"
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={changevisible}
+                          className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 hover:text-gray-700"
+                        >
+                          {passwordVisible ? (
+                            <MdVisibility className="w-5 h-5" />
+                          ) : (
+                            <MdVisibilityOff className="w-5 h-5" />
+                          )}
+                        </button>
+                      </div>
                     </div>
+
+                 
+                  <button
+                      type="submit"
+                      className="w-full py-3 bg-zinc-800 text-white font-semibold flex items-center justify-center gap-2 rounded-md hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-slate-400"
+                  >
+                      <i>
+                          <FaRegEdit className="h-8 w-6" />
+                      </i>
+                      Edit Profile
+                  </button>
+              </form>
+          </div>
+
     </div>
     </div>
   );

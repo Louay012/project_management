@@ -1,7 +1,7 @@
 <?php
 
-header("Access-Control-Allow-Origin: *"); // Allow requests from this origin
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Allow specific HTTP methods
+header("Access-Control-Allow-Origin: *"); 
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); 
 header("Access-Control-Allow-Headers: Content-Type");
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     http_response_code(200);
@@ -29,7 +29,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     $stmt=null;
     }
         catch (Exception $e) {
-        // Catch any database-related errors
+     
         echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
     }
 } else {
